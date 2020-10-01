@@ -2,6 +2,7 @@ package com.urcodebin.backend.entity;
 
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxtHighlight;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,28 +10,35 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@Table(name = "code_paste")
+@SecondaryTable(name = "source_table",
+        pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id", referencedColumnName = "ID"))
 public class CodePaste {
 
     @Id
     @GeneratedValue
-    @Column(name = "paste_id")
-    private UUID pasteId;
+    @Column(name = "ID")
+    private Integer id;
 
-    @Column(name = "source_code")
+    @Column(name = "paste_id", unique = true, nullable = false, length = 16)
+    private UUID pasteId = UUID.randomUUID();
+
     @NotNull
+    @Lob
+    @Column(name = "source_code", table = "source_table")
     private String sourceCode;
 
     @Column(name = "paste_title")
     private String pasteTitle;
 
-    @Column(name = "syntax_highlighting")
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(name = "syntax_highlighting")
     private SyntaxtHighlight syntaxHighlighting;
 
-    @Column(name = "paste_Expiration")
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(name = "paste_Expiration")
     private PasteExpiration pasteExpiration;
 
     @Override
@@ -38,7 +46,7 @@ public class CodePaste {
         if (this == o) return true;
         if (!(o instanceof CodePaste)) return false;
         CodePaste codePaste = (CodePaste) o;
-        return pasteId == codePaste.pasteId &&
+        return pasteId.equals(codePaste.pasteId) &&
                 sourceCode.equals(codePaste.sourceCode) &&
                 Objects.equals(pasteTitle, codePaste.pasteTitle) &&
                 syntaxHighlighting.equals(codePaste.syntaxHighlighting) &&
@@ -48,6 +56,10 @@ public class CodePaste {
     @Override
     public int hashCode() {
         return Objects.hash(pasteId, sourceCode, pasteTitle, syntaxHighlighting, pasteExpiration);
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public UUID getPasteId() {

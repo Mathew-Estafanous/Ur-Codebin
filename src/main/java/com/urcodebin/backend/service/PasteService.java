@@ -5,6 +5,9 @@ import com.urcodebin.backend.repository.CodePasteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service("PasteService")
 public class PasteService implements IPasteService {
 
@@ -21,7 +24,7 @@ public class PasteService implements IPasteService {
     }
 
     @Override
-    public int getPastesCounts() {
-        return (int) codePasteRepository.count();
+    public Optional<CodePaste> findByPasteId(UUID pasteId) {
+        return codePasteRepository.findOneByPasteId(pasteId);
     }
 }

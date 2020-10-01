@@ -17,7 +17,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.urcodebin.views.main.MainView;
@@ -25,6 +24,8 @@ import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.EnumSet;
+import java.util.Optional;
+import java.util.UUID;
 
 @Route(value = "paste", layout = MainView.class)
 @PageTitle("+ Paste")
@@ -61,6 +62,7 @@ public class PasteView extends Div {
         upload.addClickListener(e -> {
             pasteService.createNewPaste(binder.getBean());
             Notification.show("Paste has been uploaded!!");
+
             clearForm();
         });
     }
