@@ -2,7 +2,6 @@ package com.urcodebin.backend.entity;
 
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxtHighlight;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,11 +16,11 @@ public class CodePaste {
 
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @Column(name = "ID", nullable = false, unique = true)
     private Integer id;
 
     @Column(name = "paste_id", unique = true, nullable = false, length = 16)
-    private UUID pasteId = UUID.randomUUID();
+    private final UUID pasteId = UUID.randomUUID();
 
     @NotNull
     @Lob
@@ -64,10 +63,6 @@ public class CodePaste {
 
     public UUID getPasteId() {
         return pasteId;
-    }
-
-    public void setPasteId(UUID pasteId) {
-        this.pasteId = pasteId;
     }
 
     public String getSourceCode() {

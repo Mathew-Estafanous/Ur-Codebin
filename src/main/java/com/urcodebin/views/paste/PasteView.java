@@ -24,8 +24,6 @@ import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.EnumSet;
-import java.util.Optional;
-import java.util.UUID;
 
 @Route(value = "paste", layout = MainView.class)
 @PageTitle("+ Paste")
