@@ -11,14 +11,10 @@ import java.util.UUID;
 @Entity
 @Table(name = "code_paste")
 @SecondaryTable(name = "source_table",
-        pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id", referencedColumnName = "ID"))
+        pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id", referencedColumnName = "paste_id"))
 public class CodePaste {
 
     @Id
-    @GeneratedValue
-    @Column(name = "ID", nullable = false, unique = true)
-    private Integer id;
-
     @Column(name = "paste_id", unique = true, nullable = false, length = 16)
     private final UUID pasteId = UUID.randomUUID();
 
@@ -55,10 +51,6 @@ public class CodePaste {
     @Override
     public int hashCode() {
         return Objects.hash(pasteId, sourceCode, pasteTitle, syntaxHighlighting, pasteExpiration);
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public UUID getPasteId() {

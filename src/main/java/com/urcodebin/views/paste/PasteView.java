@@ -59,7 +59,6 @@ public class PasteView extends Div {
         undo.addClickListener(e -> clearForm());
         upload.addClickListener(e -> {
             pasteService.createNewPaste(binder.getBean());
-            Notification.show("Paste has been uploaded!!");
 
             clearForm();
         });
