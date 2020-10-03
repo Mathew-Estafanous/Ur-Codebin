@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface PasteService {
 
-    void createNewPaste(CodePaste codePaste);
+    CodePaste createNewPaste(CodePaste codePaste);
 
     Optional<CodePaste> findByPasteId(UUID pasteId);
 }

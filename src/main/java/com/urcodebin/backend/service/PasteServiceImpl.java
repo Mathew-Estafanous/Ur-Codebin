@@ -22,9 +22,9 @@ public class PasteServiceImpl implements PasteService {
     }
 
     @Override
-    public void createNewPaste(CodePaste codePaste) {
+    public CodePaste createNewPaste(CodePaste codePaste) {
         LOGGER.info("Adding new paste to database | UUID: " + codePaste.getPasteId().toString());
-        codePasteRepository.save(codePaste);
+        return codePasteRepository.save(codePaste);
     }
 
     @Override
