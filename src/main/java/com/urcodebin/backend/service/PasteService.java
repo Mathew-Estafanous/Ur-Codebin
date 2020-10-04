@@ -1,27 +1,13 @@
 package com.urcodebin.backend.service;
 
 import com.urcodebin.backend.entity.CodePaste;
-import com.urcodebin.backend.repository.CodePasteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service("PasteService")
-public class PasteService implements IPasteService {
+import java.util.Optional;
+import java.util.UUID;
 
-    private final CodePasteRepository codePasteRepository;
+public interface PasteService {
 
-    @Autowired
-    public PasteService(CodePasteRepository codePasteRepository) {
-        this.codePasteRepository = codePasteRepository;
-    }
+    CodePaste createNewPaste(CodePaste codePaste);
 
-    @Override
-    public void createNewPaste(CodePaste codePaste) {
-        codePasteRepository.save(codePaste);
-    }
-
-    @Override
-    public int getPastesCounts() {
-        return (int) codePasteRepository.count();
-    }
+    Optional<CodePaste> findByPasteId(UUID pasteId);
 }

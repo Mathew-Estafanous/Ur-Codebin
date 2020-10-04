@@ -1,7 +1,7 @@
 package com.urcodebin.views.paste;
 
 import com.urcodebin.backend.entity.CodePaste;
-import com.urcodebin.backend.service.IPasteService;
+import com.urcodebin.backend.service.PasteService;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxtHighlight;
 import com.vaadin.flow.component.Component;
@@ -12,12 +12,10 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.urcodebin.views.main.MainView;
@@ -42,7 +40,7 @@ public class PasteView extends Div {
 
     private final Binder<CodePaste> binder = new Binder<>(CodePaste.class);
 
-    public PasteView(@Qualifier("PasteService") IPasteService pasteService) {
+    public PasteView(@Qualifier("PasteService") PasteService pasteService) {
         setId("paste-view");
 
         setupSourceCodeTextArea();
@@ -60,7 +58,7 @@ public class PasteView extends Div {
         undo.addClickListener(e -> clearForm());
         upload.addClickListener(e -> {
             pasteService.createNewPaste(binder.getBean());
-            Notification.show("Paste has been uploaded!!");
+
             clearForm();
         });
     }
