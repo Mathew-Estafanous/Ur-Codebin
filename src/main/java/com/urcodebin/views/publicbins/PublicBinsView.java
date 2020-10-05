@@ -6,6 +6,7 @@ import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
 import com.urcodebin.enumerators.StringToPasteExpiration;
 import com.urcodebin.enumerators.StringToSyntaxHighlight;
+import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.UI;
@@ -94,10 +95,7 @@ public class PublicBinsView extends Div {
     }
 
     private void routeToCodeViewForChosenPaste() {
-        UI currentUI = UI.getCurrent();
-        currentUI.access(() -> {
-            currentUI.getUI().ifPresent(ui -> ui.navigate(CodeView.class, paste.getPasteId().toString()));
-        });
+        PageRouter.routeToPage(CodeView.class, paste.getPasteId().toString());
     }
 
     private void populateFormWhenGridSelected() {

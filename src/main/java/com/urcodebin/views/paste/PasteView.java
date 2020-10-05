@@ -4,6 +4,7 @@ import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
+import com.urcodebin.helpers.PageRouter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -64,10 +65,7 @@ public class PasteView extends Div {
     }
 
     private void navigateToCodeView(CodePaste codePaste) {
-        UI ui = UI.getCurrent();
-        ui.access(() -> {
-            ui.getUI().ifPresent(theUI -> theUI.navigate(CodeView.class, codePaste.getPasteId().toString()));
-        });
+        PageRouter.routeToPage(CodeView.class, codePaste.getPasteId().toString());
     }
 
     private void setupCodeTitleTextField() {

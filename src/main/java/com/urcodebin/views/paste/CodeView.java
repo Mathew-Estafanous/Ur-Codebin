@@ -2,6 +2,7 @@ package com.urcodebin.views.paste;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
+import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -74,10 +75,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
     }
 
     private void routeBackToMainPageAndNotifyUser() {
-        UI currentUI = UI.getCurrent();
-        currentUI.access(() -> {
-            currentUI.getUI().ifPresent(ui -> ui.navigate(PasteView.class));
-        });
+        PageRouter.routeToPage(PasteView.class);
         Notification.show("We received an invalid ID and re-routed you back to the home page. " +
                 "Please retry with a valid ID.");
     }
