@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,5 +35,11 @@ public class PasteServiceImpl implements PasteService {
         if(!foundCodePaste.isPresent())
             LOGGER.warn("No CodePaste found with pasteId");
         return foundCodePaste;
+    }
+
+    @Override
+    public List<CodePaste> findAllPublicPastes() {
+        LOGGER.info("Finding all public CodePastes in database");
+        return codePasteRepository.findAll();
     }
 }

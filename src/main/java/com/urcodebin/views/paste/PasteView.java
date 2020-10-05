@@ -49,6 +49,7 @@ public class PasteView extends Div {
         setupCodeExpirationDropBox();
 
         add(createTitle());
+        add(new Hr());
         add(createFormLayout());
         add(createButtonLayout());
 
