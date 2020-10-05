@@ -1,7 +1,7 @@
 package com.urcodebin.backend.entity;
 
 import com.urcodebin.enumerators.PasteExpiration;
-import com.urcodebin.enumerators.SyntaxtHighlight;
+import com.urcodebin.enumerators.SyntaxHighlight;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,7 +29,7 @@ public class CodePaste {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "syntax_highlighting")
-    private SyntaxtHighlight syntaxHighlighting;
+    private SyntaxHighlight syntaxHighlighting;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -73,11 +73,11 @@ public class CodePaste {
         this.pasteTitle = pasteTitle;
     }
 
-    public SyntaxtHighlight getSyntaxHighlighting() {
+    public SyntaxHighlight getSyntaxHighlighting() {
         return syntaxHighlighting;
     }
 
-    public void setSyntaxHighlighting(SyntaxtHighlight syntaxHighlighting) {
+    public void setSyntaxHighlighting(SyntaxHighlight syntaxHighlighting) {
         this.syntaxHighlighting = syntaxHighlighting;
     }
 

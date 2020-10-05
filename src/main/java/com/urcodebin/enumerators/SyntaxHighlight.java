@@ -1,17 +1,17 @@
 package com.urcodebin.enumerators;
 
-public enum SyntaxtHighlight {
+public enum SyntaxHighlight {
     NONE ("None"),
     JAVA ("Java"),
     CSHARP ("C#"),
     Python ("Python");
 
     private final String value;
-    private SyntaxtHighlight(String value) {
+    SyntaxHighlight(String value) {
         this.value = value;
     }
 
-    private String getValue() {
+    public String getValue() {
         return value;
     }
 }

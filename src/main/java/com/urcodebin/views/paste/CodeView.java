@@ -4,18 +4,19 @@ import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -53,10 +54,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
     public void setParameter(BeforeEvent beforeEvent,
                              @OptionalParameter String pasteId) {
         if(pasteId == null) {
-            UI theUI = UI.getCurrent();
-            UI.getCurrent().access(() -> {
-                theUI.getUI().ifPresent(ui -> ui.navigate(PasteView.class));
-            });
+            routeBackToMainPageAndNotifyUser();
         } else {
             usePasteIdToFindAndDisplay(pasteId);
         }
@@ -67,15 +65,20 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         try {
             pasteUUID = UUID.fromString(pasteId);
         } catch (IllegalArgumentException e) {
-            routeToInvalidPasteId();
+            routeBackToMainPageAndNotifyUser();
             return;
         }
         Optional<CodePaste> foundCodePaste = pasteService.findByPasteId(pasteUUID);
-        foundCodePaste.ifPresentOrElse(this::displayViewWithInformation, this::routeToInvalidPasteId);
+        foundCodePaste.ifPresentOrElse(this::displayViewWithInformation, this::routeBackToMainPageAndNotifyUser);
     }
 
-    private void routeToInvalidPasteId() {
-
+    private void routeBackToMainPageAndNotifyUser() {
+        UI currentUI = UI.getCurrent();
+        UI.getCurrent().access(() -> {
+            currentUI.getUI().ifPresent(ui -> ui.navigate(PasteView.class));
+        });
+        Notification.show("We received an invalid ID and re-routed you back to the home page. " +
+                "Please retry with a valid ID.");
     }
 
     private void displayViewWithInformation(CodePaste codePaste) {

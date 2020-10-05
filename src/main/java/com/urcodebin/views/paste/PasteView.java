@@ -3,7 +3,7 @@ package com.urcodebin.views.paste;
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
 import com.urcodebin.enumerators.PasteExpiration;
-import com.urcodebin.enumerators.SyntaxtHighlight;
+import com.urcodebin.enumerators.SyntaxHighlight;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -13,6 +13,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
@@ -20,7 +21,6 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.urcodebin.views.main.MainView;
-import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.EnumSet;
@@ -32,7 +32,7 @@ public class PasteView extends Div {
 
     private final TextArea sourceCode = new TextArea("Source Code");
     private final TextField pasteTitle = new TextField("Code Title");
-    private final ComboBox<SyntaxtHighlight> syntaxHighlighting = new ComboBox<>("Syntax Highlighting");
+    private final ComboBox<SyntaxHighlight> syntaxHighlighting = new ComboBox<>("Syntax Highlighting");
     private final ComboBox<PasteExpiration> pasteExpiration = new ComboBox<>("Code Expiration");
     
     private final Button upload = new Button("Upload");
@@ -74,13 +74,17 @@ public class PasteView extends Div {
     }
 
     private void setupCodeExpirationDropBox() {
+        pasteExpiration.setItemLabelGenerator(PasteExpiration::getValue);
         pasteExpiration.setItems(EnumSet.allOf(PasteExpiration.class));
         pasteExpiration.setRequired(true);
+        pasteExpiration.setAllowCustomValue(false);
     }
 
     private void setupSyntaxHighlightDopBox() {
-        syntaxHighlighting.setItems(EnumSet.allOf(SyntaxtHighlight.class));
+        syntaxHighlighting.setItemLabelGenerator(SyntaxHighlight::getValue);
+        syntaxHighlighting.setItems(EnumSet.allOf(SyntaxHighlight.class));
         syntaxHighlighting.setRequired(true);
+        syntaxHighlighting.setAllowCustomValue(false);
     }
 
     private void setupSourceCodeTextArea() {
@@ -98,7 +102,7 @@ public class PasteView extends Div {
     private void setDefaultSettings() {
         pasteTitle.setValue("Untitled Code");
         pasteExpiration.setValue(PasteExpiration.TENMINUTES);
-        syntaxHighlighting.setValue(SyntaxtHighlight.NONE);
+        syntaxHighlighting.setValue(SyntaxHighlight.NONE);
     }
 
     private Component createTitle() {

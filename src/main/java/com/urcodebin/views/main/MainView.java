@@ -18,7 +18,6 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
-import com.urcodebin.views.main.MainView;
 import com.urcodebin.views.paste.PasteView;
 import com.urcodebin.views.publicbins.PublicBinsView;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -59,7 +58,7 @@ public class MainView extends AppLayout {
         header.setWidthFull();
         header.setAlignItems(FlexComponent.Alignment.CENTER);
         header.setId("header");
-        Image logo = new Image("images/logo.png", "Ur CodeBin logo");
+        Image logo = new Image("images/codebin.png", "Ur CodeBin logo");
         logo.setId("logo");
         header.add(logo);
         header.add(new H1("Ur CodeBin"));
