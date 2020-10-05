@@ -69,7 +69,10 @@ public class CodeView extends Div implements HasUrlParameter<String> {
             return;
         }
         Optional<CodePaste> foundCodePaste = pasteService.findByPasteId(pasteUUID);
-        foundCodePaste.ifPresentOrElse(this::displayViewWithInformation, this::routeBackToMainPageAndNotifyUser);
+        if(!foundCodePaste.isPresent())
+            routeBackToMainPageAndNotifyUser();
+        else
+            displayViewWithInformation(foundCodePaste.get());
     }
 
     private void routeBackToMainPageAndNotifyUser() {
