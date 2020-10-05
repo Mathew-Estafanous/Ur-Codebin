@@ -5,6 +5,7 @@ import com.urcodebin.backend.service.PasteService;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxtHighlight;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -24,10 +25,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.EnumSet;
 
-@Route(value = "paste", layout = MainView.class)
+@Route(value = "", layout = MainView.class)
 @PageTitle("+ Paste")
 @CssImport("./styles/views/paste/paste-view.css")
-@RouteAlias(value = "", layout = MainView.class)
 public class PasteView extends Div {
 
     private final TextArea sourceCode = new TextArea("Source Code");
@@ -57,9 +57,15 @@ public class PasteView extends Div {
 
         undo.addClickListener(e -> clearForm());
         upload.addClickListener(e -> {
-            pasteService.createNewPaste(binder.getBean());
+            CodePaste codePaste = pasteService.createNewPaste(binder.getBean());
+            navigateToCodeView(codePaste);
+        });
+    }
 
-            clearForm();
+    private void navigateToCodeView(CodePaste codePaste) {
+        UI ui = UI.getCurrent();
+        ui.access(() -> {
+            ui.getUI().ifPresent(theUI -> theUI.navigate(CodeView.class, codePaste.getPasteId().toString()));
         });
     }
 
