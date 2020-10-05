@@ -3,7 +3,7 @@ package com.urcodebin.backend.service;
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.repository.CodePasteRepository;
 import com.urcodebin.enumerators.PasteExpiration;
-import com.urcodebin.enumerators.SyntaxtHighlight;
+import com.urcodebin.enumerators.SyntaxHighlight;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class PasteServiceTest {
         codePaste = new CodePaste();
         codePaste.setPasteExpiration(PasteExpiration.TENMINUTES);
         codePaste.setPasteTitle("Test Paste Title");
-        codePaste.setSyntaxHighlighting(SyntaxtHighlight.JAVA);
+        codePaste.setSyntaxHighlighting(SyntaxHighlight.JAVA);
     }
 
     @Test

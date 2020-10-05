@@ -2,7 +2,7 @@ package com.urcodebin.backend.repository;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.enumerators.PasteExpiration;
-import com.urcodebin.enumerators.SyntaxtHighlight;
+import com.urcodebin.enumerators.SyntaxHighlight;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class CodePasteRepositoryTest {
         codePasteToFind = new CodePaste();
         codePasteToFind.setPasteExpiration(PasteExpiration.TENMINUTES);
         codePasteToFind.setPasteTitle("Test Paste Title");
-        codePasteToFind.setSyntaxHighlighting(SyntaxtHighlight.JAVA);
+        codePasteToFind.setSyntaxHighlighting(SyntaxHighlight.JAVA);
         codePasteToFind.setSourceCode("THERE IS CODE HERE");
         codePasteRepository.save(codePasteToFind);
     }
