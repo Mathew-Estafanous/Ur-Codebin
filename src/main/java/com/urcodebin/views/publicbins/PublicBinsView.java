@@ -9,7 +9,6 @@ import com.urcodebin.enumerators.StringToSyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -36,6 +35,7 @@ import com.urcodebin.views.main.MainView;
 public class PublicBinsView extends Div {
 
     private Grid<CodePaste> grid;
+    private final Div editorLayoutDiv = new Div();
 
     private final TextField pasteId = new TextField();
     private final TextField pasteTitle = new TextField();
@@ -65,7 +65,7 @@ public class PublicBinsView extends Div {
         binder.bindInstanceFields(this);
 
         clear.addClickListener(e -> {
-            clearForm();
+            disableForm();
             refreshGrid();
         });
 
@@ -75,7 +75,7 @@ public class PublicBinsView extends Div {
         splitLayout.setSizeFull();
 
         createGridLayout(splitLayout);
-        createEditorLayout(splitLayout);
+        createChosenLayout(splitLayout);
 
         add(splitLayout);
     }
@@ -108,7 +108,7 @@ public class PublicBinsView extends Div {
                     refreshGrid();
                 }
             } else {
-                clearForm();
+                disableForm();
             }
         });
     }
@@ -121,8 +121,7 @@ public class PublicBinsView extends Div {
         grid.setHeightFull();
     }
 
-    private void createEditorLayout(SplitLayout splitLayout) {
-        Div editorLayoutDiv = new Div();
+    private void createChosenLayout(SplitLayout splitLayout) {
         editorLayoutDiv.setId("editor-layout");
 
         Div editorDiv = new Div();
@@ -130,6 +129,7 @@ public class PublicBinsView extends Div {
         editorLayoutDiv.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
+        makeAllFieldsReadOnly();
         addFormItem(editorDiv, formLayout, pasteTitle, "Paste Title");
         addFormItem(editorDiv, formLayout, pasteId, "Paste ID");
         addFormItem(editorDiv, formLayout, syntaxHighlighting, "Syntax Highlight");
@@ -137,6 +137,13 @@ public class PublicBinsView extends Div {
         createButtonLayout(editorLayoutDiv);
 
         splitLayout.addToSecondary(editorLayoutDiv);
+    }
+
+    private void makeAllFieldsReadOnly() {
+        pasteTitle.setReadOnly(true);
+        syntaxHighlighting.setReadOnly(true);
+        codeExpiration.setReadOnly(true);
+        pasteId.setReadOnly(true);
     }
 
     private void createButtonLayout(Div editorLayoutDiv) {
@@ -169,12 +176,13 @@ public class PublicBinsView extends Div {
         grid.getDataProvider().refreshAll();
     }
 
-    private void clearForm() {
-        populateForm(null);
+    private void disableForm() {
+        editorLayoutDiv.setVisible(false);
     }
 
     private void populateForm(CodePaste value) {
         this.paste = value;
         binder.readBean(this.paste);
+        editorLayoutDiv.setVisible(true);
     }
 }
