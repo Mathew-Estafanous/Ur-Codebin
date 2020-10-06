@@ -11,6 +11,7 @@ import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -22,6 +23,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToUuidConverter;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -34,6 +36,7 @@ import com.urcodebin.views.main.MainView;
 @CssImport("./styles/views/publicbins/public-bins-view.css")
 public class PublicBinsView extends Div {
 
+    private final TextField pasteTitleSearch = new TextField("Search Paste Title:");
     private Grid<CodePaste> grid;
     private final Div editorLayoutDiv = new Div();
 
@@ -56,6 +59,7 @@ public class PublicBinsView extends Div {
         setId("public-bins-view");
         this.pasteService = pasteService;
         configureGrid();
+        configurePasteTitleSearch();
 
         populateFormWhenGridSelected();
 
@@ -77,7 +81,16 @@ public class PublicBinsView extends Div {
         createGridLayout(splitLayout);
         createChosenLayout(splitLayout);
 
-        add(splitLayout);
+        add(pasteTitleSearch, splitLayout);
+    }
+
+    private void configurePasteTitleSearch() {
+        pasteTitleSearch.setId("title-search");
+        pasteTitleSearch.setClearButtonVisible(true);
+        pasteTitleSearch.setValueChangeMode(ValueChangeMode.LAZY);
+        pasteTitleSearch.addValueChangeListener(event -> {
+            grid.setItems(pasteService.findAllPublicPastesWithTitle(pasteTitleSearch.getValue()));
+        });
     }
 
     private void convertBinderVariablesToUseableStrings() {
@@ -123,6 +136,7 @@ public class PublicBinsView extends Div {
 
     private void createChosenLayout(SplitLayout splitLayout) {
         editorLayoutDiv.setId("editor-layout");
+        editorLayoutDiv.setVisible(false);
 
         Div editorDiv = new Div();
         editorDiv.setId("editor");

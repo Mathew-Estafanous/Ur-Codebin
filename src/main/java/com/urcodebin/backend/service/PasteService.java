@@ -13,4 +13,6 @@ public interface PasteService {
     Optional<CodePaste> findByPasteId(UUID pasteId);
 
     List<CodePaste> findAllPublicPastes();
+
+    List<CodePaste> findAllPublicPastesWithTitle(String title);
 }

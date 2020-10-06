@@ -42,4 +42,10 @@ public class PasteServiceImpl implements PasteService {
         LOGGER.info("Finding all public CodePastes in database");
         return codePasteRepository.findAll();
     }
+
+    @Override
+    public List<CodePaste> findAllPublicPastesWithTitle(String title) {
+        LOGGER.info("Finding all public CodePastes with {} in Paste Title", title);
+        return codePasteRepository.findByPasteTitleContains(title);
+    }
 }
