@@ -11,7 +11,6 @@ import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -48,7 +47,7 @@ public class PublicBinsView extends Div {
     private final Button clear = new Button("Clear");
     private final Button view = new Button("View");
 
-    private final Binder<CodePaste> binder;
+    private final Binder<CodePaste> binder = new Binder<>(CodePaste.class);
 
     private CodePaste paste = new CodePaste();
 
@@ -63,7 +62,6 @@ public class PublicBinsView extends Div {
 
         populateFormWhenGridSelected();
 
-        binder = new Binder<>(CodePaste.class);
         convertBinderVariablesToUseableStrings();
 
         binder.bindInstanceFields(this);
@@ -75,13 +73,18 @@ public class PublicBinsView extends Div {
 
         view.addClickListener(e -> routeToCodeViewForChosenPaste());
 
-        SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setSizeFull();
+        SplitLayout splitLayout = createSplitLayout();
 
         createGridLayout(splitLayout);
         createChosenLayout(splitLayout);
 
         add(pasteTitleSearch, splitLayout);
+    }
+
+    private SplitLayout createSplitLayout() {
+        SplitLayout splitLayout = new SplitLayout();
+        splitLayout.setSizeFull();
+        return splitLayout;
     }
 
     private void configurePasteTitleSearch() {

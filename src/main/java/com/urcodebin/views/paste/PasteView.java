@@ -6,7 +6,6 @@ import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;

@@ -1,0 +1,8 @@
+INSERT INTO code_paste
+VALUES ('1f45a7b3e1794d03994f9ac550ec5e4d', 'ONEDAY', 'Java Windows PWA', 'JAVA');
+
+INSERT INTO code_paste
+VALUES ('2f6aff3d105c41aa8b05646d1ba94cba', 'FIVEHOURS', 'C# Program', 'CSHARP');
+
+INSERT INTO code_paste
+VALUES ('b4392010d7b140299e778617c2473dfb', 'FIVEHOURS', 'Python Program', 'Python');

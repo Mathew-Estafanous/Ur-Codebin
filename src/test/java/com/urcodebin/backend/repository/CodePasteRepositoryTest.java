@@ -1,8 +1,6 @@
 package com.urcodebin.backend.repository;
 
 import com.urcodebin.backend.entity.CodePaste;
-import com.urcodebin.enumerators.PasteExpiration;
-import com.urcodebin.enumerators.SyntaxHighlight;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -22,22 +22,31 @@ public class CodePasteRepositoryTest {
     @Autowired
     private CodePasteRepository codePasteRepository;
 
-    CodePaste codePasteToFind;
+    private UUID javaWindowCodePasteUUID;
+    private UUID csharpCodePasteUUID;
 
     @Before
     public void setup() {
-        codePasteToFind = new CodePaste();
-        codePasteToFind.setPasteExpiration(PasteExpiration.TENMINUTES);
-        codePasteToFind.setPasteTitle("Test Paste Title");
-        codePasteToFind.setSyntaxHighlighting(SyntaxHighlight.JAVA);
-        codePasteToFind.setSourceCode("THERE IS CODE HERE");
-        codePasteRepository.save(codePasteToFind);
+        javaWindowCodePasteUUID = UUID.fromString("1f45a7b3-e179-4d03-994f-9ac550ec5e4d");
+        csharpCodePasteUUID = UUID.fromString("2f6aff3d-105c-41aa-8b05-646d1ba94cba");
     }
 
     @Test
     public void repositoryProperlyFindsAValidCodePasteById() {
-        Optional<CodePaste> foundPaste = codePasteRepository.findById(codePasteToFind.getPasteId());
+        Optional<CodePaste> foundPaste = codePasteRepository.findById(javaWindowCodePasteUUID);
         Assert.assertTrue(foundPaste.isPresent());
-        Assert.assertEquals(codePasteToFind, foundPaste.get());
+        Assert.assertEquals(javaWindowCodePasteUUID, foundPaste.get().getPasteId());
+    }
+
+    @Test
+    public void repositoryFindsCorrectCodePasteByTitle() {
+        List<CodePaste> foundSecondPaste = codePasteRepository.findByPasteTitleContains("C#");
+        Assert.assertEquals(foundSecondPaste.get(0).getPasteId(), csharpCodePasteUUID);
+    }
+
+    @Test
+    public void repositoryFindsAllCodePastesWhenTitleIsEmpty() {
+        List<CodePaste> foundAllPastes = codePasteRepository.findByPasteTitleContains("");
+        Assert.assertEquals(foundAllPastes.size(), codePasteRepository.count());
     }
 }
