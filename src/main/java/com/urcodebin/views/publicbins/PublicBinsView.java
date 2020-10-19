@@ -36,7 +36,7 @@ import com.urcodebin.views.main.MainView;
 public class PublicBinsView extends Div {
 
     private final TextField pasteTitleSearch = new TextField("Search Paste Title:");
-    private Grid<CodePaste> grid;
+    private final Grid<CodePaste> grid = new Grid<>(CodePaste.class);;
     private final Div editorLayoutDiv = new Div();
 
     private final TextField pasteId = new TextField();
@@ -117,20 +117,17 @@ public class PublicBinsView extends Div {
     private void populateFormWhenGridSelected() {
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                Optional<CodePaste> pasteFromBackend = pasteService.findByPasteId(event.getValue().getPasteId());
-                if(pasteFromBackend.isPresent()){
+                Optional<CodePaste> pasteFromBackend = grid.getSelectedItems().stream().findFirst();
+                if(pasteFromBackend.isPresent())
                     populateForm(pasteFromBackend.get());
-                } else {
+                else
                     refreshGrid();
-                }
-            } else {
+            } else
                 disableForm();
-            }
         });
     }
 
     private void configureGrid() {
-        grid = new Grid<>(CodePaste.class);
         grid.setColumns("pasteTitle", "pasteId", "syntaxHighlighting", "pasteExpiration");
         grid.setDataProvider(DataProvider.ofCollection(pasteService.findAllPublicPastes()));
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -139,7 +136,7 @@ public class PublicBinsView extends Div {
 
     private void createChosenLayout(SplitLayout splitLayout) {
         editorLayoutDiv.setId("editor-layout");
-        editorLayoutDiv.setVisible(false);
+        disableForm();
 
         Div editorDiv = new Div();
         editorDiv.setId("editor");
