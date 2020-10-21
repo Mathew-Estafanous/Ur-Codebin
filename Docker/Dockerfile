@@ -1,5 +1,15 @@
+FROM alpine:3.11 AS builder
+RUN apk update && \
+    apk add 'nodejs>10.19.0-r0'
+RUN apk add 'maven>3.6.1-r0'
+RUN apk add openjdk11
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src/
+COPY frontend ./frontend/
+RUN mvn clean install -Pproduction
+
 FROM adoptopenjdk/openjdk11:alpine-jre
 WORKDIR /app
-COPY ../target/ur-codebin-1.0-SNAPSHOT.jar app.jar
-EXPOSE 8080
-CMD java -jar -Dspring.profiles.active=prod /app/app.jar
+COPY --from=builder /app/target/ur-codebin-1.0-SNAPSHOT.jar app.jar
+CMD java -jar -Dspring.profiles.active=prod app.jar
