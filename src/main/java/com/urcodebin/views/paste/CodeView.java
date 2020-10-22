@@ -5,7 +5,6 @@ import com.urcodebin.backend.service.PasteService;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;

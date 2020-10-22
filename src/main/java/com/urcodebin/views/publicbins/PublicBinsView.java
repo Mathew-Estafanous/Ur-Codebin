@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
-import com.urcodebin.enumerators.StringToPasteExpiration;
-import com.urcodebin.enumerators.StringToSyntaxHighlight;
+import com.urcodebin.convertors.StringToLocalDateTime;
+import com.urcodebin.convertors.StringToSyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.AbstractField;
@@ -106,7 +106,7 @@ public class PublicBinsView extends Div {
                 .bind(CodePaste::getSyntaxHighlighting, CodePaste::setSyntaxHighlighting);
 
         binder.forField(codeExpiration)
-                .withConverter(new StringToPasteExpiration())
+                .withConverter(new StringToLocalDateTime())
                 .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
     }
 
