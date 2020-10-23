@@ -3,7 +3,6 @@ package com.urcodebin.views.paste;
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
 import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
-import com.urcodebin.convertors.StringToPasteExpiration;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;

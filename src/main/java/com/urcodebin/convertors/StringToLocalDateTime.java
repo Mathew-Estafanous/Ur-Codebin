@@ -9,8 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 public class StringToLocalDateTime implements Converter<String, LocalDateTime> {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
-    private final DateTimeFormatter parseFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss.zzz");
+    private final DateTimeFormatter parseFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public Result<LocalDateTime> convertToModel(String s, ValueContext valueContext) {
@@ -24,6 +23,6 @@ public class StringToLocalDateTime implements Converter<String, LocalDateTime> {
 
     @Override
     public String convertToPresentation(LocalDateTime localDateTime, ValueContext valueContext) {
-        return (localDateTime != null)? localDateTime.format(formatter): null;
+        return (localDateTime != null)? localDateTime.format(parseFormat): null;
     }
 }

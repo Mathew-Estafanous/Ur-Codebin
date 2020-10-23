@@ -1,6 +1,8 @@
 package com.urcodebin.helpers;
 
 import com.urcodebin.enumerators.PasteExpiration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -9,33 +11,27 @@ import java.time.ZoneOffset;
 public class PasteExpirationHelper {
 
     public static LocalDateTime getLocalDateTimeFromChosenPasteExpiration(PasteExpiration expiration) {
-        LocalDateTime offsetDateTime;
+        LocalDateTime offsetDateTime = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
         switch (expiration){
             case TENMINUTES:
-                offsetDateTime = createLocalDateTimeFromOffset(0, 10);
+                offsetDateTime = offsetDateTime.plusMinutes(10);
                 break;
             case THIRTYMINUTES:
-                offsetDateTime = createLocalDateTimeFromOffset(0, 30);
+                offsetDateTime = offsetDateTime.plusMinutes(30);
                 break;
             case ONEHOUR:
-                offsetDateTime = createLocalDateTimeFromOffset(1, 0);
+                offsetDateTime = offsetDateTime.plusHours(1);
                 break;
             case FIVEHOURS:
-                offsetDateTime = createLocalDateTimeFromOffset(5,0);
+                offsetDateTime = offsetDateTime.plusHours(5);
                 break;
             case ONEDAY:
-                offsetDateTime = createLocalDateTimeFromOffset(24, 0);
+                offsetDateTime = offsetDateTime.plusDays(1);
                 break;
             case THREEDAYS:
-                offsetDateTime = createLocalDateTimeFromOffset(72, 0);
+                offsetDateTime = offsetDateTime.plusDays(3);
                 break;
-            default:
-                offsetDateTime = createLocalDateTimeFromOffset(0, 0);
         }
         return offsetDateTime;
-    }
-
-    private static LocalDateTime createLocalDateTimeFromOffset(int hours, int minutes) {
-        return Instant.now().atOffset(ZoneOffset.ofHoursMinutes(hours, minutes)).toLocalDateTime();
     }
 }

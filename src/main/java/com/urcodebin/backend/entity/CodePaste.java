@@ -1,7 +1,6 @@
 package com.urcodebin.backend.entity;
 
 import com.urcodebin.enumerators.SyntaxHighlight;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

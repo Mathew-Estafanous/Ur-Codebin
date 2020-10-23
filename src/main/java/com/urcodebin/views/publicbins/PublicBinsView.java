@@ -36,7 +36,7 @@ import com.urcodebin.views.main.MainView;
 public class PublicBinsView extends Div {
 
     private final TextField pasteTitleSearch = new TextField("Search Paste Title:");
-    private final Grid<CodePaste> grid = new Grid<>(CodePaste.class);;
+    private final Grid<CodePaste> grid = new Grid<>(CodePaste.class);
     private final Div editorLayoutDiv = new Div();
 
     private final TextField pasteId = new TextField();

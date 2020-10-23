@@ -2,6 +2,8 @@ package com.urcodebin.views.paste;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
+import com.urcodebin.convertors.StringToLocalDateTime;
+import com.urcodebin.convertors.StringToSyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.Component;
@@ -15,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,13 +31,13 @@ import java.util.UUID;
 public class CodeView extends Div implements HasUrlParameter<String> {
 
     private final TextArea sourceCode = new TextArea("Source Code");
-    private final TextArea rawCode = new TextArea("Raw Paste Code");
     private final Label syntaxLabel = new Label("Syntax Highlighting:");
     private final TextField syntaxHighlight = new TextField();
     private final Label expirationLabel = new Label("Code Expiration:");
-    private final TextField codeExpiration = new TextField();
+    private final TextField codeExpirationDate = new TextField();
     private final H2 codeTitle = new H2("Fake Title");
 
+    private final Binder<CodePaste> binder = new Binder<>(CodePaste.class);
     private final PasteService pasteService;
 
     @Autowired
@@ -46,6 +49,14 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         add(new Hr());
         add(createChosenOptionsView());
         add(createCodeView());
+
+        binder.forField(codeExpirationDate)
+                .withConverter(new StringToLocalDateTime())
+                .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
+        binder.forField(syntaxHighlight)
+                .withConverter(new StringToSyntaxHighlight())
+                .bind(CodePaste::getSyntaxHighlighting, CodePaste::setSyntaxHighlighting);
+        binder.bindInstanceFields(this);
     }
 
     @Override
@@ -80,17 +91,14 @@ public class CodeView extends Div implements HasUrlParameter<String> {
     }
 
     private void displayViewWithInformation(CodePaste codePaste) {
-        sourceCode.setValue(codePaste.getSourceCode());
-        rawCode.setValue(codePaste.getSourceCode());
-        syntaxHighlight.setValue(codePaste.getSyntaxHighlighting().toString());
-        codeExpiration.setValue(codePaste.getPasteExpiration().toString());
+        binder.readBean(codePaste);
         codeTitle.setText(codePaste.getPasteTitle());
     }
 
     private Component createChosenOptionsView() {
         return new HorizontalLayout(
                 syntaxLabel, syntaxHighlight,
-                expirationLabel, codeExpiration
+                expirationLabel, codeExpirationDate
         );
     }
 
@@ -98,17 +106,8 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         VerticalLayout sourceCodeLayout = new VerticalLayout();
         sourceCodeLayout.setClassName("source-code-layout");
         TextArea sourceCode = setupSourceCodeTextArea();
-        TextArea rawCode = setupRawCodeTextArea();
-        sourceCodeLayout.add(sourceCode, rawCode);
+        sourceCodeLayout.add(sourceCode);
         return sourceCodeLayout;
-    }
-
-    private TextArea setupRawCodeTextArea() {
-        rawCode.setWidth("100%");
-        rawCode.setMinHeight("400px");
-        rawCode.setMaxHeight("400px");
-        rawCode.setReadOnly(true);
-        return rawCode;
     }
 
     private TextArea setupSourceCodeTextArea() {
@@ -120,7 +119,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
 
     private Component setupTitleView() {
         syntaxHighlight.setReadOnly(true);
-        codeExpiration.setReadOnly(true);
+        codeExpirationDate.setReadOnly(true);
         Div headerDiv= new Div();
         headerDiv.add(codeTitle);
         return headerDiv;
