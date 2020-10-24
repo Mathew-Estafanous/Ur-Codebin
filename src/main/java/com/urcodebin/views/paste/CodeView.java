@@ -35,7 +35,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
     private final TextField syntaxHighlight = new TextField();
     private final Label expirationLabel = new Label("Code Expiration:");
     private final TextField codeExpirationDate = new TextField();
-    private final H2 codeTitle = new H2("Fake Title");
+    private final H2 pasteTitle = new H2("Paste Title");
 
     private final Binder<CodePaste> binder = new Binder<>(CodePaste.class);
     private final PasteService pasteService;
@@ -50,13 +50,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         add(createChosenOptionsView());
         add(createCodeView());
 
-        binder.forField(codeExpirationDate)
-                .withConverter(new StringToLocalDateTime())
-                .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
-        binder.forField(syntaxHighlight)
-                .withConverter(new StringToSyntaxHighlight())
-                .bind(CodePaste::getSyntaxHighlighting, CodePaste::setSyntaxHighlighting);
-        binder.bindInstanceFields(this);
+        createBinderForFields();
     }
 
     @Override
@@ -67,6 +61,16 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         } else {
             usePasteIdToFindAndDisplay(pasteId);
         }
+    }
+
+    private void createBinderForFields() {
+        binder.forField(codeExpirationDate)
+                .withConverter(new StringToLocalDateTime())
+                .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
+        binder.forField(syntaxHighlight)
+                .withConverter(new StringToSyntaxHighlight())
+                .bind(CodePaste::getSyntaxHighlighting, CodePaste::setSyntaxHighlighting);
+        binder.bindInstanceFields(this);
     }
 
     private void usePasteIdToFindAndDisplay(String pasteId) {
@@ -81,18 +85,18 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         if(!foundCodePaste.isPresent())
             routeBackToMainPageAndNotifyUser();
         else
-            displayViewWithInformation(foundCodePaste.get());
+            updatePageWithInformation(foundCodePaste.get());
+    }
+
+    private void updatePageWithInformation(CodePaste foundCodePaste) {
+        pasteTitle.setText(foundCodePaste.getPasteTitle());
+        binder.readBean(foundCodePaste);
     }
 
     private void routeBackToMainPageAndNotifyUser() {
         PageRouter.routeToPage(PasteView.class);
         Notification.show("We received an invalid ID and re-routed you back to the home page. " +
                 "Please retry with a valid ID.");
-    }
-
-    private void displayViewWithInformation(CodePaste codePaste) {
-        binder.readBean(codePaste);
-        codeTitle.setText(codePaste.getPasteTitle());
     }
 
     private Component createChosenOptionsView() {
@@ -121,7 +125,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         syntaxHighlight.setReadOnly(true);
         codeExpirationDate.setReadOnly(true);
         Div headerDiv= new Div();
-        headerDiv.add(codeTitle);
+        headerDiv.add(pasteTitle);
         return headerDiv;
     }
 }
