@@ -1,12 +1,13 @@
 package com.urcodebin.convertors;
 
 import com.urcodebin.enumerators.PasteExpiration;
-import com.urcodebin.helpers.PasteExpirationHelper;
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class PasteExpirationToLocalDateTime implements Converter<PasteExpiration, LocalDateTime> {
     @Override
@@ -14,7 +15,7 @@ public class PasteExpirationToLocalDateTime implements Converter<PasteExpiration
         if(pasteExpiration == null)
             return Result.ok(null);
         else {
-            LocalDateTime dateTime = PasteExpirationHelper.getLocalDateTimeFromChosenPasteExpiration(pasteExpiration);
+            LocalDateTime dateTime = getLocalDateTimeFromChosenPasteExpiration(pasteExpiration);
             return Result.ok(dateTime);
         }
     }
@@ -22,5 +23,10 @@ public class PasteExpirationToLocalDateTime implements Converter<PasteExpiration
     @Override
     public PasteExpiration convertToPresentation(LocalDateTime s, ValueContext valueContext) {
         return PasteExpiration.TENMINUTES;
+    }
+
+    private LocalDateTime getLocalDateTimeFromChosenPasteExpiration(PasteExpiration expiration) {
+        LocalDateTime offsetDateTime = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
+        return offsetDateTime.plusMinutes(expiration.getOffsetMin());
     }
 }
