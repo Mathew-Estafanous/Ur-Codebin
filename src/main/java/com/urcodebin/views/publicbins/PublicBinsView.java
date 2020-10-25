@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
-import com.urcodebin.enumerators.StringToPasteExpiration;
-import com.urcodebin.enumerators.StringToSyntaxHighlight;
+import com.urcodebin.convertors.StringToLocalDateTime;
+import com.urcodebin.convertors.StringToSyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.AbstractField;
@@ -36,7 +36,7 @@ import com.urcodebin.views.main.MainView;
 public class PublicBinsView extends Div {
 
     private final TextField pasteTitleSearch = new TextField("Search Paste Title:");
-    private final Grid<CodePaste> grid = new Grid<>(CodePaste.class);;
+    private final Grid<CodePaste> grid = new Grid<>(CodePaste.class);
     private final Div editorLayoutDiv = new Div();
 
     private final TextField pasteId = new TextField();
@@ -106,7 +106,7 @@ public class PublicBinsView extends Div {
                 .bind(CodePaste::getSyntaxHighlighting, CodePaste::setSyntaxHighlighting);
 
         binder.forField(codeExpiration)
-                .withConverter(new StringToPasteExpiration())
+                .withConverter(new StringToLocalDateTime())
                 .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
     }
 

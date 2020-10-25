@@ -2,7 +2,6 @@ package com.urcodebin.backend.service;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.repository.CodePasteRepository;
-import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -31,7 +31,7 @@ public class PasteServiceTest {
     @Before
     public void setup() {
         codePaste = new CodePaste();
-        codePaste.setPasteExpiration(PasteExpiration.TENMINUTES);
+        codePaste.setPasteExpiration(LocalDateTime.now());
         codePaste.setPasteTitle("Test Paste Title");
         codePaste.setSyntaxHighlighting(SyntaxHighlight.JAVA);
     }

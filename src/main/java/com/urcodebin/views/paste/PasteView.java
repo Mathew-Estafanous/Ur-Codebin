@@ -2,6 +2,7 @@ package com.urcodebin.views.paste;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.service.PasteService;
+import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;
@@ -53,6 +54,9 @@ public class PasteView extends Div {
         add(createFormLayout());
         add(createButtonLayout());
 
+        binder.forField(pasteExpiration)
+                .withConverter(new PasteExpirationToLocalDateTime())
+                .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
         binder.bindInstanceFields(this);
         clearForm();
 

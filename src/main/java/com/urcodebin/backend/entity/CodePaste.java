@@ -1,10 +1,10 @@
 package com.urcodebin.backend.entity;
 
-import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,9 +32,8 @@ public class CodePaste {
     private SyntaxHighlight syntaxHighlighting;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     @Column(name = "paste_Expiration")
-    private PasteExpiration pasteExpiration;
+    private LocalDateTime pasteExpirationDate;
 
     @Override
     public boolean equals(Object o) {
@@ -45,12 +44,12 @@ public class CodePaste {
                 sourceCode.equals(codePaste.sourceCode) &&
                 Objects.equals(pasteTitle, codePaste.pasteTitle) &&
                 syntaxHighlighting.equals(codePaste.syntaxHighlighting) &&
-                pasteExpiration.equals(codePaste.pasteExpiration);
+                pasteExpirationDate.equals(codePaste.pasteExpirationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pasteId, sourceCode, pasteTitle, syntaxHighlighting, pasteExpiration);
+        return Objects.hash(pasteId, sourceCode, pasteTitle, syntaxHighlighting, pasteExpirationDate);
     }
 
     public UUID getPasteId() {
@@ -81,11 +80,11 @@ public class CodePaste {
         this.syntaxHighlighting = syntaxHighlighting;
     }
 
-    public PasteExpiration getPasteExpiration() {
-        return pasteExpiration;
+    public LocalDateTime getPasteExpiration() {
+        return pasteExpirationDate;
     }
 
-    public void setPasteExpiration(PasteExpiration pasteExpiration) {
-        this.pasteExpiration = pasteExpiration;
+    public void setPasteExpiration(LocalDateTime pasteExpirationDate) {
+        this.pasteExpirationDate = pasteExpirationDate;
     }
 }
