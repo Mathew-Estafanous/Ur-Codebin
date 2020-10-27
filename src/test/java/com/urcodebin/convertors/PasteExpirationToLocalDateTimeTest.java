@@ -1,7 +1,6 @@
 package com.urcodebin.convertors;
 
 import com.urcodebin.enumerators.PasteExpiration;
-import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
 
@@ -11,6 +10,7 @@ import org.junit.Test;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 
 public class PasteExpirationToLocalDateTimeTest {
 
@@ -21,14 +21,17 @@ public class PasteExpirationToLocalDateTimeTest {
         Assert.assertNull(converter.convertToModel(null, new ValueContext())
                             .getOrThrow(AssertionError::new));
 
-        LocalDateTime testDateTime = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC).plusHours(1);
-        LocalDateTime timeResults = converter.convertToModel(PasteExpiration.ONEHOUR, new ValueContext())
-                    .getOrThrow(AssertionError::new);
-
-        Assert.assertEquals(testDateTime.getDayOfMonth(), timeResults.getDayOfMonth());
-        Assert.assertEquals(testDateTime.getMonth(), timeResults.getMonth());
-        Assert.assertEquals(testDateTime.getDayOfYear(), timeResults.getDayOfYear());
-        Assert.assertEquals(testDateTime.getHour(), timeResults.getHour());
-        Assert.assertEquals(testDateTime.getMinute(), timeResults.getMinute());
+        Arrays.stream(PasteExpiration.values())
+            .forEach(pasteExpiration -> {
+                LocalDateTime expectedDateTime = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
+                        .plusMinutes(pasteExpiration.getOffsetMin());
+                LocalDateTime dateTimeResults = converter.convertToModel(pasteExpiration, new ValueContext())
+                        .getOrThrow(AssertionError::new);
+                Assert.assertEquals(expectedDateTime.getDayOfMonth(), dateTimeResults.getDayOfMonth());
+                Assert.assertEquals(expectedDateTime.getMonth(), dateTimeResults.getMonth());
+                Assert.assertEquals(expectedDateTime.getDayOfYear(), dateTimeResults.getDayOfYear());
+                Assert.assertEquals(expectedDateTime.getHour(), dateTimeResults.getHour());
+                Assert.assertEquals(expectedDateTime.getMinute(), dateTimeResults.getMinute());
+            });
     }
 }
