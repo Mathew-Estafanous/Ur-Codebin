@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,11 +25,13 @@ public class CodePasteRepositoryTest {
 
     private UUID javaWindowCodePasteUUID;
     private UUID csharpCodePasteUUID;
+    private LocalDateTime testDateTime;
 
     @Before
     public void setup() {
         javaWindowCodePasteUUID = UUID.fromString("1f45a7b3-e179-4d03-994f-9ac550ec5e4d");
         csharpCodePasteUUID = UUID.fromString("2f6aff3d-105c-41aa-8b05-646d1ba94cba");
+        testDateTime = LocalDateTime.parse("2020-10-24T18:00:00");
     }
 
     @Test
@@ -48,5 +51,13 @@ public class CodePasteRepositoryTest {
     public void repositoryFindsAllCodePastesWhenTitleIsEmpty() {
         List<CodePaste> foundAllPastes = codePasteRepository.findByPasteTitleContains("");
         Assert.assertEquals(foundAllPastes.size(), codePasteRepository.count());
+    }
+
+    @Test
+    public void repositoryFindsAllExpiredCodePastes() {
+        List<CodePaste> expiredPastes = codePasteRepository.findByPasteExpirationDateLessThan(testDateTime);
+        boolean areAllPastesExpired = expiredPastes.stream()
+                .allMatch(codePaste -> codePaste.getPasteExpiration().isBefore(testDateTime));
+        Assert.assertTrue(areAllPastesExpired);
     }
 }
