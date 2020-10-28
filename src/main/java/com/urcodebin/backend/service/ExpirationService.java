@@ -25,10 +25,11 @@ public class ExpirationService {
     }
 
     @Scheduled(cron = "0 */5 * * * *")
-    public void deleteExpiredCodePastes() {
+    public List<CodePaste>  deleteExpiredCodePastes() {
         LocalDateTime currentTime = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
         List<CodePaste> expiredPastes = codePasteRepository.findByPasteExpirationDateLessThan(currentTime);
         LOGGER.info("Deleting {} expired CodePastes", expiredPastes.size());
         codePasteRepository.deleteAll(expiredPastes);
+        return expiredPastes;
     }
 }
