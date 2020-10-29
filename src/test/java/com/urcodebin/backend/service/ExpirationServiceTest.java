@@ -26,7 +26,7 @@ public class ExpirationServiceTest {
     CodePasteRepository codePasteRepository;
 
     @InjectMocks
-    ExpirationService expirationService;
+    ExpirationServiceImpl expirationService;
 
     List<CodePaste> listOfExpired = new ArrayList<>();
 
