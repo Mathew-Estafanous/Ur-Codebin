@@ -4,6 +4,7 @@ import com.urcodebin.backend.entity.CodePaste;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,4 +13,6 @@ import java.util.UUID;
 public interface CodePasteRepository extends JpaRepository<CodePaste, UUID> {
 
     List<CodePaste> findByPasteTitleContains(String pasteTitle);
+
+    List<CodePaste> findByPasteExpirationDateLessThan(LocalDateTime time);
 }
