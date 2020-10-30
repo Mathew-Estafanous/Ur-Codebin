@@ -22,6 +22,6 @@ jobs:
         env:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          BUILD_PATH: /Docker/
+          BUILD_PATH: ./Docker/
           IMAGE_NAME: "mathewestafanous/ur-codebin"
           LATEST: "true"
