@@ -1,6 +1,7 @@
 package com.urcodebin.backend.service;
 
 import com.urcodebin.backend.entity.CodePaste;
+import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.backend.repository.CodePasteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

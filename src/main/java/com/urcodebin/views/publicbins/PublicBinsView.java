@@ -3,7 +3,7 @@ package com.urcodebin.views.publicbins;
 import java.util.Optional;
 
 import com.urcodebin.backend.entity.CodePaste;
-import com.urcodebin.backend.service.PasteService;
+import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.convertors.StringToLocalDateTime;
 import com.urcodebin.convertors.StringToSyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;

@@ -1,4 +1,4 @@
-package com.urcodebin.backend.service;
+package com.urcodebin.backend.interfaces;
 
 import com.urcodebin.backend.entity.CodePaste;
 

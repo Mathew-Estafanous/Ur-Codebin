@@ -5,9 +5,11 @@ RUN apk add 'maven>3.6.1-r0'
 RUN apk add openjdk11
 WORKDIR /app
 COPY pom.xml .
+COPY package.json .
+COPY package-lock.json .
 COPY src ./src/
 COPY frontend ./frontend/
-RUN mvn clean install -Pproduction
+RUN mvn package -Pproduction
 
 FROM adoptopenjdk/openjdk11:alpine-jre
 WORKDIR /app

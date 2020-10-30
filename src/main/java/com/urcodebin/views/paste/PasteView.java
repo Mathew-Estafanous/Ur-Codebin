@@ -1,7 +1,7 @@
 package com.urcodebin.views.paste;
 
 import com.urcodebin.backend.entity.CodePaste;
-import com.urcodebin.backend.service.PasteService;
+import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
