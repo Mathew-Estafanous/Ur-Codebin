@@ -1,0 +1,27 @@
+# Github Action that builds the docker file and pushes it to docker hub.
+name: Docker Build & Push
+
+# Trigger this action when an update is pushed to the main branch
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Docker Build & Push to Docker Hub
+        uses: opspresso/action-docker@master
+        with:
+          args: --docker
+        env:
+          USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          BUILD_PATH: /Docker/
+          IMAGE_NAME: "mathewestafanous/ur-codebin"
+          LATEST: "true"
