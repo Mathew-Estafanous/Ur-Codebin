@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Mathew-Estafanous/Ur-Codebin">
-    <img src="src\main\resources\META-INF\resources\icons\icon.png" alt="Logo" width="80" height="80">
+    <img src="src\main\resources\META-INF\resources\images\codebin.png" alt="Logo" width="80" height="80">
   </a>
 
   <h1 align="center">Ur-Weather App</h1>
