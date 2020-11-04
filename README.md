@@ -6,7 +6,7 @@
   <h1 align="center">Ur-Weather App</h1>
 
   <p align="center">
-    Simple and minimilistic weather app that displays relevant weather information!
+    Simple and easy to use code paste bin that allows easy code sharing!
     <br />
     <a href="https://github.com/Mathew-Estafanous/Ur-Codebin"><strong>Explore the docs »</strong></a>
     <br />
@@ -76,7 +76,7 @@ The following needs to be installed on your machine for the application to prope
 
 ### Cloning
 
-1. Go to preferred directory
+1. Go to your preferred directory
 ```sh
 cd FakeFolder/NotRealDirectory/
 ```
