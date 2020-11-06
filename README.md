@@ -3,7 +3,7 @@
     <img src="src\main\resources\META-INF\resources\images\codebin.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h1 align="center">Ur-Weather App</h1>
+  <h1 align="center">Ur-Codebin</h1>
 
   <p align="center">
     Simple and easy to use code paste bin that allows easy code sharing!
@@ -24,7 +24,7 @@
 
 * [About the Project](#about-the-project)
   * [Future Features](#future-features)
-  * [Built With & Using](#built-with-&-using)
+  * [Technologies Used](#technologies-used)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#cloning)
@@ -52,7 +52,7 @@ to enhance the project. Here is a small list of features that are hoped to achie
 * More filtering options for public pastes
 * Profile system that connects pastes to specific users.
 
-### Built With & Using
+### Technologies Used
 
 * [Vaadin](https://vaadin.com/)
 * [Spring Boot](https://spring.io/)
