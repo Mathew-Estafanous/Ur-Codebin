@@ -3,6 +3,7 @@ package com.urcodebin.backend.service;
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.backend.repository.CodePasteRepository;
+import com.urcodebin.enumerators.PasteVisibility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,12 @@ public class PasteServiceImpl implements PasteService {
     @Override
     public List<CodePaste> findAllPublicPastes() {
         LOGGER.info("Finding all public CodePastes in database");
-        return codePasteRepository.findAll();
+        return codePasteRepository.findByPasteVisibilityIs(PasteVisibility.PUBLIC);
     }
 
     @Override
     public List<CodePaste> findAllPublicPastesWithTitle(String title) {
         LOGGER.info("Finding all public CodePastes with {} in Paste Title", title);
-        return codePasteRepository.findByPasteTitleContains(title);
+        return codePasteRepository.findByPasteTitleContainsAndPasteVisibilityIs(title, PasteVisibility.PUBLIC);
     }
 }

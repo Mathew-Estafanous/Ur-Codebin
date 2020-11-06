@@ -1,6 +1,7 @@
 package com.urcodebin.backend.repository;
 
 import com.urcodebin.backend.entity.CodePaste;
+import com.urcodebin.enumerators.PasteVisibility;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +27,7 @@ public class CodePasteRepositoryTest {
     private UUID javaWindowCodePasteUUID;
     private UUID csharpCodePasteUUID;
     private LocalDateTime testDateTime;
+    private int totalPrivatePastes = 1;
 
     @Before
     public void setup() {
@@ -42,15 +44,20 @@ public class CodePasteRepositoryTest {
     }
 
     @Test
-    public void repositoryFindsCorrectCodePasteByTitle() {
-        List<CodePaste> foundSecondPaste = codePasteRepository.findByPasteTitleContains("C#");
+    public void repositoryFindsCorrectPublicCodePasteByTitle() {
+        List<CodePaste> foundSecondPaste = codePasteRepository
+                .findByPasteTitleContainsAndPasteVisibilityIs("C#", PasteVisibility.PUBLIC);
         Assert.assertEquals(foundSecondPaste.get(0).getPasteId(), csharpCodePasteUUID);
     }
 
     @Test
-    public void repositoryFindsAllCodePastesWhenTitleIsEmpty() {
-        List<CodePaste> foundAllPastes = codePasteRepository.findByPasteTitleContains("");
-        Assert.assertEquals(foundAllPastes.size(), codePasteRepository.count());
+    public void repositoryFindsAllPublicCodePastesWhenTitleIsEmpty() {
+        List<CodePaste> foundAllPastes = codePasteRepository
+                .findByPasteTitleContainsAndPasteVisibilityIs("", PasteVisibility.PUBLIC);
+        boolean allPastesArePublic = foundAllPastes.stream()
+                .allMatch(paste -> paste.getPasteVisibility() == PasteVisibility.PUBLIC);
+        Assert.assertTrue(allPastesArePublic);
+        Assert.assertEquals(foundAllPastes.size(), codePasteRepository.count() - totalPrivatePastes);
     }
 
     @Test

@@ -1,0 +1,3 @@
+ALTER TABLE code_paste
+ADD COLUMN paste_visibility varchar(255)
+SET DEFAULT 'PUBLIC';
