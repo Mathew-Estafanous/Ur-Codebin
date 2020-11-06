@@ -1,11 +1,11 @@
 package com.urcodebin.enumerators;
 
-public enum Visibility {
+public enum PasteVisibility {
     PUBLIC ("Public"),
     PRIVATE ("Private");
 
     private final String value;
-    Visibility(String value) {
+    PasteVisibility(String value) {
         this.value = value;
     }
 

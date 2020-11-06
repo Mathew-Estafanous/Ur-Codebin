@@ -5,7 +5,7 @@ import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
-import com.urcodebin.enumerators.Visibility;
+import com.urcodebin.enumerators.PasteVisibility;
 import com.urcodebin.helpers.PageRouter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -36,7 +36,7 @@ public class PasteView extends Div {
     private final TextField pasteTitle = new TextField("Code Title");
     private final ComboBox<SyntaxHighlight> syntaxHighlighting = new ComboBox<>("Syntax Highlighting");
     private final ComboBox<PasteExpiration> pasteExpiration = new ComboBox<>("Code Expiration");
-    private final ComboBox<Visibility> pasteVisibility = new ComboBox<>("Paste Visibility");
+    private final ComboBox<PasteVisibility> pasteVisibility = new ComboBox<>("Paste Visibility");
     
     private final Button upload = new Button("Upload");
     private final Button undo = new Button("Undo");
@@ -79,8 +79,8 @@ public class PasteView extends Div {
     }
 
     private void setupPasteVisibilityDropBox() {
-        pasteVisibility.setItemLabelGenerator(Visibility::getValue);
-        pasteVisibility.setItems(EnumSet.allOf(Visibility.class));
+        pasteVisibility.setItemLabelGenerator(PasteVisibility::getValue);
+        pasteVisibility.setItems(EnumSet.allOf(PasteVisibility.class));
         pasteVisibility.setRequired(true);
         pasteVisibility.setAllowCustomValue(false);
     }
@@ -115,7 +115,7 @@ public class PasteView extends Div {
         pasteTitle.setValue("Untitled Code");
         pasteExpiration.setValue(PasteExpiration.TENMINUTES);
         syntaxHighlighting.setValue(SyntaxHighlight.NONE);
-        pasteVisibility.setValue(Visibility.PRIVATE);
+        pasteVisibility.setValue(PasteVisibility.PRIVATE);
     }
 
     private Component createTitle() {
