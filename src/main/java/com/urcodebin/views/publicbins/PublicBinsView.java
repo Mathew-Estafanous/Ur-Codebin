@@ -179,6 +179,7 @@ public class PublicBinsView extends Div {
         wrapper.add(grid);
     }
 
+    @SuppressWarnings("rawtypes")
     private void addFormItem(Div wrapper, FormLayout formLayout, AbstractField field, String fieldName) {
         formLayout.addFormItem(field, fieldName);
         wrapper.add(formLayout);

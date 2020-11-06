@@ -27,6 +27,7 @@ public class CodePasteRepositoryTest {
     private UUID javaWindowCodePasteUUID;
     private UUID csharpCodePasteUUID;
     private LocalDateTime testDateTime;
+    private int totalPrivatePastes = 1;
 
     @Before
     public void setup() {
@@ -43,17 +44,20 @@ public class CodePasteRepositoryTest {
     }
 
     @Test
-    public void repositoryFindsCorrectCodePasteByTitle() {
+    public void repositoryFindsCorrectPublicCodePasteByTitle() {
         List<CodePaste> foundSecondPaste = codePasteRepository
                 .findByPasteTitleContainsAndPasteVisibilityIs("C#", PasteVisibility.PUBLIC);
         Assert.assertEquals(foundSecondPaste.get(0).getPasteId(), csharpCodePasteUUID);
     }
 
     @Test
-    public void repositoryFindsAllCodePastesWhenTitleIsEmpty() {
+    public void repositoryFindsAllPublicCodePastesWhenTitleIsEmpty() {
         List<CodePaste> foundAllPastes = codePasteRepository
                 .findByPasteTitleContainsAndPasteVisibilityIs("", PasteVisibility.PUBLIC);
-        Assert.assertEquals(foundAllPastes.size(), codePasteRepository.count());
+        boolean allPastesArePublic = foundAllPastes.stream()
+                .allMatch(paste -> paste.getPasteVisibility() == PasteVisibility.PUBLIC);
+        Assert.assertTrue(allPastesArePublic);
+        Assert.assertEquals(foundAllPastes.size(), codePasteRepository.count() - totalPrivatePastes);
     }
 
     @Test
