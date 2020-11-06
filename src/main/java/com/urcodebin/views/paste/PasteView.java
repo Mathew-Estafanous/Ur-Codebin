@@ -5,6 +5,7 @@ import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
+import com.urcodebin.enumerators.Visibility;
 import com.urcodebin.helpers.PageRouter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -35,6 +36,7 @@ public class PasteView extends Div {
     private final TextField pasteTitle = new TextField("Code Title");
     private final ComboBox<SyntaxHighlight> syntaxHighlighting = new ComboBox<>("Syntax Highlighting");
     private final ComboBox<PasteExpiration> pasteExpiration = new ComboBox<>("Code Expiration");
+    private final ComboBox<Visibility> pasteVisibility = new ComboBox<>("Paste Visibility");
     
     private final Button upload = new Button("Upload");
     private final Button undo = new Button("Undo");
@@ -48,6 +50,7 @@ public class PasteView extends Div {
         setupCodeTitleTextField();
         setupSyntaxHighlightDopBox();
         setupCodeExpirationDropBox();
+        setupPasteVisibilityDropBox();
 
         add(createTitle());
         add(new Hr());
@@ -73,6 +76,13 @@ public class PasteView extends Div {
 
     private void setupCodeTitleTextField() {
         pasteTitle.setMaxLength(60);
+    }
+
+    private void setupPasteVisibilityDropBox() {
+        pasteVisibility.setItemLabelGenerator(Visibility::getValue);
+        pasteVisibility.setItems(EnumSet.allOf(Visibility.class));
+        pasteVisibility.setRequired(true);
+        pasteVisibility.setAllowCustomValue(false);
     }
 
     private void setupCodeExpirationDropBox() {
@@ -105,6 +115,7 @@ public class PasteView extends Div {
         pasteTitle.setValue("Untitled Code");
         pasteExpiration.setValue(PasteExpiration.TENMINUTES);
         syntaxHighlighting.setValue(SyntaxHighlight.NONE);
+        pasteVisibility.setValue(Visibility.PRIVATE);
     }
 
     private Component createTitle() {
@@ -118,7 +129,7 @@ public class PasteView extends Div {
                 new FormLayout.ResponsiveStep("500px", 2)
         );
         formLayout.setColspan(sourceCode, 2);
-        formLayout.add(sourceCode, syntaxHighlighting, pasteExpiration, pasteTitle);
+        formLayout.add(sourceCode, syntaxHighlighting, pasteExpiration, pasteTitle, pasteVisibility);
         return formLayout;
     }
 

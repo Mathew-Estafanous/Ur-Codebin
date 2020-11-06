@@ -1,6 +1,7 @@
 package com.urcodebin.backend.entity;
 
 import com.urcodebin.enumerators.SyntaxHighlight;
+import com.urcodebin.enumerators.Visibility;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -34,6 +35,11 @@ public class CodePaste {
     @NotNull
     @Column(name = "paste_Expiration")
     private LocalDateTime pasteExpirationDate;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "paste_visibility")
+    private Visibility pasteVisibility;
 
     @Override
     public boolean equals(Object o) {
@@ -86,5 +92,13 @@ public class CodePaste {
 
     public void setPasteExpiration(LocalDateTime pasteExpirationDate) {
         this.pasteExpirationDate = pasteExpirationDate;
+    }
+
+    public Visibility getPasteVisibility() {
+        return pasteVisibility;
+    }
+
+    public void setPasteVisibility(Visibility pasteVisibility) {
+        this.pasteVisibility = pasteVisibility;
     }
 }
