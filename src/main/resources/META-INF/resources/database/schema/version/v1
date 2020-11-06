@@ -1,0 +1,9 @@
+ALTER TABLE code_paste
+ADD expiration_date datetime;
+
+UPDATE code_paste
+SET
+    expiration_date = NOW() + INTERVAL 10 MINUTE;
+
+ALTER TABLE code_paste
+RENAME COLUMN expiration_date TO paste_expiration;

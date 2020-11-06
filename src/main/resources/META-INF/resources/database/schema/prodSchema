@@ -1,0 +1,14 @@
+CREATE TABLE code_paste (
+  paste_id binary(16) not null,
+  paste_expiration varchar(255),
+  paste_title varchar(255),
+  syntax_highlighting varchar(255),
+  paste_visibility varchar(255),
+  primary key (paste_id)
+);
+
+CREATE TABLE source_table (
+  source_id binary(16) not null,
+  source_code MEDIUMTEXT,
+  primary key (source_id)
+);
