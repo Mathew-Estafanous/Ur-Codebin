@@ -1,5 +1,6 @@
 package com.urcodebin.views.publicbins;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.urcodebin.backend.entity.CodePaste;
@@ -76,7 +77,7 @@ public class PublicBinsView extends Div {
         SplitLayout splitLayout = createSplitLayout();
 
         createGridLayout(splitLayout);
-        createChosenLayout(splitLayout);
+        createFormLayout(splitLayout);
 
         add(pasteTitleSearch, splitLayout);
     }
@@ -91,9 +92,7 @@ public class PublicBinsView extends Div {
         pasteTitleSearch.setId("title-search");
         pasteTitleSearch.setClearButtonVisible(true);
         pasteTitleSearch.setValueChangeMode(ValueChangeMode.LAZY);
-        pasteTitleSearch.addValueChangeListener(event -> {
-            grid.setItems(pasteService.findAllPublicPastesWithTitle(pasteTitleSearch.getValue()));
-        });
+        pasteTitleSearch.addValueChangeListener(e -> updateGridWithSearchFilter());
     }
 
     private void convertBinderVariablesToUseableStrings() {
@@ -108,6 +107,63 @@ public class PublicBinsView extends Div {
         binder.forField(codeExpiration)
                 .withConverter(new StringToLocalDateTime())
                 .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
+    }
+
+    private void configureGrid() {
+        grid.setColumns("pasteTitle", "pasteId", "pasteSyntax", "pasteExpiration");
+        grid.setDataProvider(DataProvider.ofCollection(pasteService.findAllPublicPastes()));
+        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+        grid.setHeightFull();
+    }
+
+    private void createFormLayout(SplitLayout splitLayout) {
+        editorLayoutDiv.setId("editor-layout");
+        disableForm();
+
+        Div editorDiv = new Div();
+        editorDiv.setId("editor");
+        editorLayoutDiv.add(editorDiv);
+
+        FormLayout formLayout = new FormLayout();
+        makeAllFormFieldsReadOnly();
+        addFormItem(editorDiv, formLayout, pasteTitle, "Paste Title");
+        addFormItem(editorDiv, formLayout, pasteId, "Paste ID");
+        addFormItem(editorDiv, formLayout, pasteSyntax, "Syntax Highlight");
+        addFormItem(editorDiv, formLayout, codeExpiration, "Code Expiration");
+        createFormButtonLayout(editorLayoutDiv);
+
+        splitLayout.addToSecondary(editorLayoutDiv);
+    }
+
+    private void makeAllFormFieldsReadOnly() {
+        pasteTitle.setReadOnly(true);
+        pasteSyntax.setReadOnly(true);
+        codeExpiration.setReadOnly(true);
+        pasteId.setReadOnly(true);
+    }
+
+    private void createFormButtonLayout(Div editorLayoutDiv) {
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setId("button-layout");
+        buttonLayout.setWidthFull();
+        buttonLayout.setSpacing(true);
+        clear.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        view.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonLayout.add(view, clear);
+        editorLayoutDiv.add(buttonLayout);
+    }
+
+    private void createGridLayout(SplitLayout splitLayout) {
+        Div wrapper = new Div();
+        wrapper.setId("grid-wrapper");
+        wrapper.setWidthFull();
+        splitLayout.addToPrimary(wrapper);
+        wrapper.add(grid);
+    }
+
+    private void updateGridWithSearchFilter() {
+        List<CodePaste> foundPublicPastes = pasteService.findAllPublicPastesWithTitle(pasteTitleSearch.getValue());
+        grid.setItems(foundPublicPastes);
     }
 
     private void routeToCodeViewForChosenPaste() {
@@ -125,58 +181,6 @@ public class PublicBinsView extends Div {
             } else
                 disableForm();
         });
-    }
-
-    private void configureGrid() {
-        grid.setColumns("pasteTitle", "pasteId", "pasteSyntax", "pasteExpiration");
-        grid.setDataProvider(DataProvider.ofCollection(pasteService.findAllPublicPastes()));
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        grid.setHeightFull();
-    }
-
-    private void createChosenLayout(SplitLayout splitLayout) {
-        editorLayoutDiv.setId("editor-layout");
-        disableForm();
-
-        Div editorDiv = new Div();
-        editorDiv.setId("editor");
-        editorLayoutDiv.add(editorDiv);
-
-        FormLayout formLayout = new FormLayout();
-        makeAllFieldsReadOnly();
-        addFormItem(editorDiv, formLayout, pasteTitle, "Paste Title");
-        addFormItem(editorDiv, formLayout, pasteId, "Paste ID");
-        addFormItem(editorDiv, formLayout, pasteSyntax, "Syntax Highlight");
-        addFormItem(editorDiv, formLayout, codeExpiration, "Code Expiration");
-        createButtonLayout(editorLayoutDiv);
-
-        splitLayout.addToSecondary(editorLayoutDiv);
-    }
-
-    private void makeAllFieldsReadOnly() {
-        pasteTitle.setReadOnly(true);
-        pasteSyntax.setReadOnly(true);
-        codeExpiration.setReadOnly(true);
-        pasteId.setReadOnly(true);
-    }
-
-    private void createButtonLayout(Div editorLayoutDiv) {
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setId("button-layout");
-        buttonLayout.setWidthFull();
-        buttonLayout.setSpacing(true);
-        clear.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        view.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonLayout.add(view, clear);
-        editorLayoutDiv.add(buttonLayout);
-    }
-
-    private void createGridLayout(SplitLayout splitLayout) {
-        Div wrapper = new Div();
-        wrapper.setId("grid-wrapper");
-        wrapper.setWidthFull();
-        splitLayout.addToPrimary(wrapper);
-        wrapper.add(grid);
     }
 
     @SuppressWarnings("rawtypes")
