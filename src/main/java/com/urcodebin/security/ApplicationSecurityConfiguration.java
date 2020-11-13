@@ -19,6 +19,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     private static final String LOGIN_FAILURE_URL = "/login?error";
     private static final String LOGIN_URL = "/login";
     private static final String LOGOUT_SUCCESS_URL = "/login";
+    private static final String LOGOUT_URL = "/logout";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,7 +33,10 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .loginPage(LOGIN_URL).permitAll()
                 .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 .failureUrl(LOGIN_FAILURE_URL)
-                .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+            .and().logout()
+                .logoutUrl(LOGOUT_URL)
+                .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+                .invalidateHttpSession(true);
     }
 
     @Override

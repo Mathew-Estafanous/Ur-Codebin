@@ -25,14 +25,6 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         setHorizontalComponentAlignment(Alignment.CENTER, userLoginForm, registerButton);
         userLoginForm.setForgotPasswordButtonVisible(false);
         userLoginForm.setAction("login");
-        userLoginForm.addLoginListener(e -> {
-            boolean isAuthenticated = true;
-            if (isAuthenticated) {
-                successfulLogin();
-            } else {
-                userLoginForm.setError(true);
-            }
-        });
 
         registerButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         registerButton.setMinWidth("400px");
@@ -40,13 +32,6 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
             PageRouter.routeToPage(RegisterView.class);
         });
         add(userLoginForm, registerButton);
-    }
-
-
-    private void successfulLogin() {
-        String successMessage = "Welcome to Ur-Codebin. Logged in!";
-        Notification notification = Notification.show(successMessage);
-        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.urcodebin.views.account;
 
 import com.urcodebin.backend.entity.UserAccount;
+import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -68,6 +69,7 @@ public class RegisterView extends VerticalLayout {
                 //store the created bean in the backend
 
                 successfulRegistration();
+                PageRouter.routeToPage(LoginView.class);
 
             } catch (ValidationException validationException) {
                 validationException.printStackTrace();
