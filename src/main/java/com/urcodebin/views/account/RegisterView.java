@@ -28,12 +28,12 @@ import java.util.regex.Pattern;
 @PageTitle("Account Registration")
 public class RegisterView extends VerticalLayout {
 
-    private final H3 registrationTitle;
-    private final Hr divider;
-    private final TextField username;
-    private final PasswordField mainPassword;
-    private final PasswordField matchPassword;
-    private final EmailField emailField;
+    private final H3 registrationTitle = new H3("Register For An Account");
+    private final Hr divider = new Hr();
+    private final TextField username = new TextField("Username");
+    private final PasswordField mainPassword = new PasswordField("Password");
+    private final PasswordField matchPassword = new PasswordField("Same Password");
+    private final EmailField emailField = new EmailField("Email");
 
     private final Button registerButton;
     private final Span errorMessage;
@@ -43,14 +43,6 @@ public class RegisterView extends VerticalLayout {
     private boolean enablePasswordValidation;
 
     private RegisterView() {
-        registrationTitle =  new H3("Register For An Account");
-        divider = new Hr();
-
-        username = new TextField("Username");
-        mainPassword = new PasswordField("Password");
-        matchPassword = new PasswordField("Same Password");
-
-        emailField = new EmailField("Email");
         emailField.setVisible(true);
 
         errorMessage = new Span();
