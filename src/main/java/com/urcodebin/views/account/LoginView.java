@@ -1,6 +1,9 @@
 package com.urcodebin.views.account;
 
+import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -13,11 +16,11 @@ import com.vaadin.flow.router.Route;
 public class LoginView extends VerticalLayout {
 
     private LoginForm userLoginForm = new LoginForm();
+    private Button registerButton = new Button("Create An Account");
 
     private LoginView() {
-
         setSizeFull();
-        setHorizontalComponentAlignment(Alignment.CENTER, userLoginForm);
+        setHorizontalComponentAlignment(Alignment.CENTER, userLoginForm, registerButton);
         userLoginForm.setForgotPasswordButtonVisible(false);
         userLoginForm.addLoginListener(e -> {
             boolean isAuthenticated = true;
@@ -28,8 +31,14 @@ public class LoginView extends VerticalLayout {
             }
         });
 
-        add(userLoginForm);
+        registerButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        registerButton.setMinWidth("400px");
+        registerButton.addClickListener(e -> {
+            PageRouter.routeToPage(RegisterView.class);
+        });
+        add(userLoginForm, registerButton);
     }
+
 
     private void successfulLogin() {
         String successMessage = "Welcome to Ur-Codebin. Logged in!";
