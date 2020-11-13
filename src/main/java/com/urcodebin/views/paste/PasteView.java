@@ -24,12 +24,14 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.urcodebin.views.main.MainView;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.annotation.Secured;
 
 import java.util.EnumSet;
 
 @Route(value = "", layout = MainView.class)
 @PageTitle("+ Paste")
 @CssImport("./styles/views/paste/paste-view.css")
+@Secured("ROLE_USER")
 public class PasteView extends Div {
 
     private final TextArea sourceCode = new TextArea("Source Code");
