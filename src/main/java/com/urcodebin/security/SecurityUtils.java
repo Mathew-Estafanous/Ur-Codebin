@@ -16,14 +16,14 @@ import java.util.stream.Stream;
 
 public class SecurityUtils {
 
-    static boolean isFrameworkInternalRequest(HttpServletRequest request) {
+    public static boolean isFrameworkInternalRequest(HttpServletRequest request) {
         final String parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER);
         return parameterValue != null
                 && Stream.of(ServletHelper.RequestType.values())
                 .anyMatch(r -> r.getIdentifier().equals(parameterValue));
     }
 
-    static boolean isAccessGranted(Class<?> securedClass) {
+    public static boolean isAccessGranted(Class<?> securedClass) {
         // Allow if no roles are required.
         Secured secured = AnnotationUtils.findAnnotation(securedClass, Secured.class);
         if (secured == null) {

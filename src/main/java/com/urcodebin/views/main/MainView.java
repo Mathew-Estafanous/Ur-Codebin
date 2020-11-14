@@ -1,7 +1,12 @@
 package com.urcodebin.views.main;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import com.urcodebin.security.SecurityUtils;
+import com.urcodebin.views.account.LoginView;
+import com.urcodebin.views.account.ProfileView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -9,6 +14,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -73,10 +79,15 @@ public class MainView extends AppLayout {
     }
 
     private static Tab[] getAvailableTabs() {
-        return new Tab[] {
-            createTab("+ Paste", PasteView.class),
-            createTab("Public Bins", PublicBinsView.class)
-        };
+        final List<Tab> availableTabs = new ArrayList<>();
+        availableTabs.add(createTab("+ Paste", PasteView.class));
+        availableTabs.add(createTab("Public Bins", PublicBinsView.class));
+        if(SecurityUtils.isAccessGranted(ProfileView.class)) {
+            availableTabs.add(createTab("Your Profile", ProfileView.class));
+        } else {
+            availableTabs.add(createTab("Login", LoginView.class));
+        }
+        return availableTabs.toArray(new Tab[availableTabs.size()]);
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {

@@ -1,5 +1,8 @@
-package com.urcodebin.security;
+package com.urcodebin.security.configuration;
 
+import com.urcodebin.security.CustomRequestCache;
+import com.urcodebin.security.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
@@ -20,6 +24,13 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     private static final String LOGIN_URL = "/login";
     private static final String LOGOUT_SUCCESS_URL = "/login";
     private static final String LOGOUT_URL = "/logout";
+
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
+    public ApplicationSecurityConfiguration(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -58,7 +69,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     public UserDetailsService userDetailsService() {
         UserDetails user =
                 User.withUsername("user")
-                        .password("{noop}password")
+                        .password(passwordEncoder.encode("password"))
                         .roles("USER")
                         .build();
 

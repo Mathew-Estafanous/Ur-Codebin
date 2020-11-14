@@ -31,7 +31,6 @@ import java.util.EnumSet;
 @Route(value = "", layout = MainView.class)
 @PageTitle("+ Paste")
 @CssImport("./styles/views/paste/paste-view.css")
-@Secured("ROLE_USER")
 public class PasteView extends Div {
 
     private final TextArea sourceCode = new TextArea("Source Code");
