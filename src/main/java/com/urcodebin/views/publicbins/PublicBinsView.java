@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import com.urcodebin.views.main.MainView;
 
-@Route(value = "bins", layout = MainView.class)
+@Route(value = "publicBins", layout = MainView.class)
 @PageTitle("Public Bins")
 @CssImport("./styles/views/publicbins/public-bins-view.css")
 public class PublicBinsView extends Div {

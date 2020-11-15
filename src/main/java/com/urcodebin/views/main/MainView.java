@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.urcodebin.security.SecurityUtils;
 import com.urcodebin.views.account.LoginView;
-import com.urcodebin.views.account.ProfileView;
+import com.urcodebin.views.account.UserBinView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.HasComponents;
@@ -45,7 +45,7 @@ public class MainView extends AppLayout {
 
     private final static String PASTE_TITLE = "+ Paste";
     private final static String PUBLIC_BIN_TITLE = "Public Bins";
-    private final static String PROFILE_TITLE = "Your Profile";
+    private final static String PROFILE_TITLE = "My Paste Bin";
     private final static String LOGOUT_TITLE = "Logout";
     private final static String LOGIN_TITLE = "Login";
 
@@ -94,8 +94,8 @@ public class MainView extends AppLayout {
         availableTabs.add(createTab(PASTE_TITLE, VaadinIcon.EDIT, PasteView.class));
         availableTabs.add(createTab(PUBLIC_BIN_TITLE, VaadinIcon.BROWSER, PublicBinsView.class));
 
-        if(SecurityUtils.isAccessGranted(ProfileView.class)) {
-            availableTabs.add(createTab(PROFILE_TITLE, VaadinIcon.USER, ProfileView.class));
+        if(SecurityUtils.isAccessGranted(UserBinView.class)) {
+            availableTabs.add(createTab(PROFILE_TITLE, VaadinIcon.USER, UserBinView.class));
 
             final String contextPath = VaadinServlet.getCurrent().getServletContext().getContextPath();
             availableTabs.add(createTab(createLogoutLink(contextPath)));
@@ -138,9 +138,13 @@ public class MainView extends AppLayout {
     }
 
     private Optional<Tab> getTabForComponent(Component component) {
-        return menu.getChildren()
-                .filter(tab -> ComponentUtil.getData(tab, Class.class)
-                        .equals(component.getClass()))
-                .findFirst().map(Tab.class::cast);
+        try {
+            return menu.getChildren()
+                    .filter(tab -> ComponentUtil.getData(tab, Class.class)
+                            .equals(component.getClass()))
+                    .findFirst().map(Tab.class::cast);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }
