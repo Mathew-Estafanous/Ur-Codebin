@@ -1,0 +1,6 @@
+CREATE TABLE user_accounts (
+  account_id bigint PRIMARY KEY NOT NULL,
+  account_username varchar(255) NOT NULL,
+  account_email varchar(255) NOT NULL,
+  account_password varchar(255) NOT NULL
+);

@@ -31,7 +31,7 @@ import java.util.Optional;
 @Secured("ROLE_USER")
 public class UserBinView extends VerticalLayout {
 
-    private final Grid<CodePaste> profileBin = new Grid<>(CodePaste.class);
+    private final Grid<CodePaste> profileBinGrid = new Grid<>(CodePaste.class);
     private final FormLayout formLayout = new FormLayout();
 
     private CodePaste selectedCodePaste;
@@ -80,19 +80,19 @@ public class UserBinView extends VerticalLayout {
     }
 
     private void configureGrid() {
-        profileBin.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
-        profileBin.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
-        profileBin.setSelectionMode(Grid.SelectionMode.SINGLE);
-        profileBin.setDataProvider(DataProvider.ofCollection(createTempPastes()));
-        profileBin.getColumns().forEach(col -> col.setAutoWidth(true));
+        profileBinGrid.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
+        profileBinGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+        profileBinGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        profileBinGrid.setDataProvider(DataProvider.ofCollection(createTempPastes()));
+        profileBinGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         addGridSelectFunctionality();
     }
 
     private void addGridSelectFunctionality() {
-        profileBin.asSingleSelect().addValueChangeListener(event -> {
+        profileBinGrid.asSingleSelect().addValueChangeListener(event -> {
            if(event.getValue() != null) {
-               Optional<CodePaste> selectedPaste = profileBin.getSelectedItems().stream().findFirst();
+               Optional<CodePaste> selectedPaste = profileBinGrid.getSelectedItems().stream().findFirst();
                if(selectedPaste.isPresent()) {
                    setButtonsEnabled(true);
                    selectedCodePaste = selectedPaste.get();
@@ -111,7 +111,7 @@ public class UserBinView extends VerticalLayout {
     private SplitLayout createSplitLayout() {
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.setSizeFull();
-        splitLayout.addToPrimary(profileBin);
+        splitLayout.addToPrimary(profileBinGrid);
         splitLayout.setPrimaryStyle("minWidth", "80%");
         splitLayout.setPrimaryStyle("maxWidth", "80%");
 
