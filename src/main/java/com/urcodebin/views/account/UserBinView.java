@@ -3,7 +3,9 @@ package com.urcodebin.views.account;
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.enumerators.PasteVisibility;
 import com.urcodebin.enumerators.SyntaxHighlight;
+import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
+import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -22,14 +24,17 @@ import org.springframework.security.access.annotation.Secured;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Route(value = "myBin", layout = MainView.class)
-@PageTitle("Your Profile")
+@PageTitle("My Bin")
 @Secured("ROLE_USER")
 public class UserBinView extends VerticalLayout {
 
     private final Grid<CodePaste> profileBin = new Grid<>(CodePaste.class);
     private final FormLayout formLayout = new FormLayout();
+
+    private CodePaste selectedCodePaste;
 
     public UserBinView() {
         H1 profileUsername = new H1("TwinsRock88's Paste Bin");
@@ -41,16 +46,34 @@ public class UserBinView extends VerticalLayout {
 
     private void configureForm() {
         Button copyLinkBtn = createDisabledButton("Get Shareable Link" ,ButtonVariant.LUMO_CONTRAST);
+        addListenerForCopyLinkBtn(copyLinkBtn);
         Button goToPasteBtn = createDisabledButton("Go To Paste", ButtonVariant.LUMO_PRIMARY);
+        addListenerForGoToBtn(goToPasteBtn);
         Button deletePasteBtn = createDisabledButton("Delete Paste", ButtonVariant.LUMO_ERROR);
-
+        addListenerForDeleteBtn(deletePasteBtn);
         formLayout.add(copyLinkBtn, goToPasteBtn, deletePasteBtn);
+    }
+
+    private void addListenerForGoToBtn(Button goToBtn) {
+        goToBtn.addClickListener(event -> {
+            PageRouter.routeToPage(CodeView.class, selectedCodePaste.getPasteId().toString());
+        });
+    }
+
+    private void addListenerForCopyLinkBtn(Button copyBtn) {
+        copyBtn.addClickListener(event -> {
+            System.out.println("COPYING THE LINK FOR THE PAGE");
+        });
+    }
+    private void addListenerForDeleteBtn(Button deleteBtn) {
+        deleteBtn.addClickListener(event -> {
+            System.out.println("DELETING THE PASTE");
+        });
     }
 
     private Button createDisabledButton(String title, ButtonVariant btnVariant) {
         final Button btn = new Button(title);
-        btn.getStyle().set("margin", "2%");
-        btn.setWidth("90%");
+        btn.getStyle().set("margin", "3%");
         btn.addThemeVariants(btnVariant);
         btn.setEnabled(false);
         return btn;
@@ -58,21 +81,43 @@ public class UserBinView extends VerticalLayout {
 
     private void configureGrid() {
         profileBin.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
-        profileBin.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        profileBin.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         profileBin.setSelectionMode(Grid.SelectionMode.SINGLE);
         profileBin.setDataProvider(DataProvider.ofCollection(createTempPastes()));
+        profileBin.getColumns().forEach(col -> col.setAutoWidth(true));
+
+        addGridSelectFunctionality();
+    }
+
+    private void addGridSelectFunctionality() {
+        profileBin.asSingleSelect().addValueChangeListener(event -> {
+           if(event.getValue() != null) {
+               Optional<CodePaste> selectedPaste = profileBin.getSelectedItems().stream().findFirst();
+               if(selectedPaste.isPresent()) {
+                   setButtonsEnabled(true);
+                   selectedCodePaste = selectedPaste.get();
+               }
+           } else
+               setButtonsEnabled(false);
+        });
+    }
+
+    private void setButtonsEnabled(boolean val) {
+        formLayout.getChildren()
+                .filter(component -> component instanceof Button)
+                .forEach(btn -> ((Button) btn).setEnabled(val));
     }
 
     private SplitLayout createSplitLayout() {
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.setSizeFull();
         splitLayout.addToPrimary(profileBin);
-        splitLayout.setPrimaryStyle("minWidth", "75%");
-        splitLayout.setPrimaryStyle("maxWidth", "75%");
+        splitLayout.setPrimaryStyle("minWidth", "80%");
+        splitLayout.setPrimaryStyle("maxWidth", "80%");
 
         splitLayout.addToSecondary(formLayout);
-        splitLayout.setSecondaryStyle("minWidth", "25%");
-        splitLayout.setSecondaryStyle("maxWidth", "25%");
+        splitLayout.setSecondaryStyle("minWidth", "20%");
+        splitLayout.setSecondaryStyle("maxWidth", "20%");
         return splitLayout;
     }
 
