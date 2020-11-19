@@ -9,4 +9,6 @@ public interface UserAccountService {
     Optional<UserAccount> findByAccountId(Long id);
 
     UserAccount addUserAccount(UserAccount account);
+
+    void deleteUserByAccountId(Long id);
 }
