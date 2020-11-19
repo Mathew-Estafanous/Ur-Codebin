@@ -3,6 +3,8 @@ package com.urcodebin.backend.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,6 +12,7 @@ import java.util.Objects;
 public class UserAccount {
 
     @Id
+    @GeneratedValue
     @Column(name = "account_id", unique = true, nullable = false)
     private Long id;
 
@@ -28,6 +31,14 @@ public class UserAccount {
     @Column(name = "account_email")
     private String email;
 
+    @OneToMany(
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.EAGER,
+        mappedBy = "userAccount"
+    )
+    private List<CodePaste> userCodePastes = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -44,6 +55,10 @@ public class UserAccount {
         return email;
     }
 
+    public List<CodePaste> getCodePastes() {
+        return new ArrayList<>(userCodePastes);
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -58,6 +73,14 @@ public class UserAccount {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setCodePaste(List<CodePaste> pastes) {
+        userCodePastes.addAll(pastes);
+    }
+
+    public void setCodePaste(CodePaste paste) {
+        userCodePastes.add(paste);
     }
 
     @Override

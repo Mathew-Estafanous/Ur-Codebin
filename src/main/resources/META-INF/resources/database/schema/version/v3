@@ -4,3 +4,6 @@ CREATE TABLE user_accounts (
   account_email varchar(255) NOT NULL,
   account_password varchar(255) NOT NULL
 );
+
+ALTER TABLE code_paste
+ADD COLUMN account_id bigint FOREIGN KEY REFERENCES user_accounts(account_id);

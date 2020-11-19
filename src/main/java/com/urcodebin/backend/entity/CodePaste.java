@@ -41,6 +41,10 @@ public class CodePaste {
     @Column(name = "paste_visibility")
     private PasteVisibility pasteVisibility;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private UserAccount userAccount;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,5 +104,13 @@ public class CodePaste {
 
     public void setPasteVisibility(PasteVisibility pasteVisibility) {
         this.pasteVisibility = pasteVisibility;
+    }
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 }
