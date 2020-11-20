@@ -1,6 +1,6 @@
 package com.urcodebin.security.configuration;
 
-import com.urcodebin.backend.service.UserAccountDetailsService;
+import com.urcodebin.backend.service.AccountDetailsService;
 import com.urcodebin.security.CustomRequestCache;
 import com.urcodebin.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,11 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
 
     private final PasswordEncoder passwordEncoder;
-    private final UserAccountDetailsService userAccountManager;
+    private final AccountDetailsService userAccountManager;
 
     @Autowired
     public ApplicationSecurityConfiguration(PasswordEncoder passwordEncoder,
-                                        UserAccountDetailsService userAccountManager) {
+                                        AccountDetailsService userAccountManager) {
         this.passwordEncoder = passwordEncoder;
         this.userAccountManager = userAccountManager;
     }

@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserAccountDetailsService implements UserDetailsService {
+public class AccountDetailsService implements UserDetailsService {
 
     private final UserAccountService userDetailsService;
 
     @Autowired
-    public UserAccountDetailsService(@Qualifier("AccountService") UserAccountService userDetailsService) {
+    public AccountDetailsService(@Qualifier("AccountService") UserAccountService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
