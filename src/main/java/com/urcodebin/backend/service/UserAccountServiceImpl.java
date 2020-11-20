@@ -6,6 +6,7 @@ import com.urcodebin.backend.repository.UserAccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,9 +18,13 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserAccountServiceImpl(UserAccountRepository userAccountRepository) {
+    public UserAccountServiceImpl(UserAccountRepository userAccountRepository,
+                                  PasswordEncoder passwordEncoder) {
         this.userAccountRepository = userAccountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -33,8 +38,9 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public UserAccount addUserAccount(UserAccount account) {
-        LOGGER.info("Adding new user account to database | ID: {}", account.getId());
-        return userAccountRepository.save(account);
+        UserAccount user = createNewEncryptedUser(account);
+        LOGGER.info("Adding new user account to database | ID: {}", user.getId());
+        return userAccountRepository.save(user);
     }
 
     @Override
@@ -42,4 +48,19 @@ public class UserAccountServiceImpl implements UserAccountService {
         LOGGER.info("Deleting user account from database | ID: {}", id);
         userAccountRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<UserAccount> findByUsername(String username) {
+        return userAccountRepository.findByUsernameEquals(username);
+    }
+
+    private UserAccount createNewEncryptedUser(UserAccount account) {
+        UserAccount user = new UserAccount();
+        user.setUsername(account.getUsername());
+        user.setEmail(account.getEmail());
+        user.setCodePaste(account.getCodePastes());
+        user.setPassword(passwordEncoder.encode(account.getPassword()));
+        return user;
+    }
+
 }

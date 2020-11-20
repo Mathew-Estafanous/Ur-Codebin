@@ -8,6 +8,8 @@ public interface UserAccountService {
 
     Optional<UserAccount> findByAccountId(Long id);
 
+    Optional<UserAccount> findByUsername(String username);
+
     UserAccount addUserAccount(UserAccount account);
 
     void deleteUserByAccountId(Long id);

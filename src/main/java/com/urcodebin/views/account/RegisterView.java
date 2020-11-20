@@ -1,6 +1,7 @@
 package com.urcodebin.views.account;
 
 import com.urcodebin.backend.entity.UserAccount;
+import com.urcodebin.backend.interfaces.UserAccountService;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.button.Button;
@@ -21,6 +22,8 @@ import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +46,11 @@ public class RegisterView extends VerticalLayout {
 
     private boolean enablePasswordValidation;
 
-    private RegisterView() {
+    private final UserAccountService userAccountService;
+
+    @Autowired
+    private RegisterView(@Qualifier("AccountService") UserAccountService userAccountService) {
+        this.userAccountService = userAccountService;
         emailField.setVisible(true);
 
         errorMessage = new Span();
@@ -66,10 +73,7 @@ public class RegisterView extends VerticalLayout {
             try {
                 binder.writeBean(acccountRegister);
 
-                //store the created bean in the backend
-
-                successfulRegistration();
-                PageRouter.routeToPage(LoginView.class);
+                registerUser(acccountRegister);
 
             } catch (ValidationException validationException) {
                 validationException.printStackTrace();
@@ -119,10 +123,16 @@ public class RegisterView extends VerticalLayout {
         registerLayout.setColspan(registerButton, 2);
     }
 
+    private void registerUser(UserAccount newUser) {
+        userAccountService.addUserAccount(newUser);
+        successfulRegistration();
+    }
+
     private void successfulRegistration() {
         String successMessage = "Awesome your registration is complete! You are now a member of Ur-Codebin.";
         Notification notification = Notification.show(successMessage);
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        PageRouter.routeToPage(LoginView.class);
     }
 
     //TODO: Remove placeholder and make it request for the service to find same usernames.

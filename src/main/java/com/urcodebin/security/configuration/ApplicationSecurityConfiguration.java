@@ -1,19 +1,19 @@
 package com.urcodebin.security.configuration;
 
+import com.urcodebin.backend.service.UserAccountDetailsService;
 import com.urcodebin.security.CustomRequestCache;
 import com.urcodebin.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
@@ -25,11 +25,20 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     private static final String LOGOUT_SUCCESS_URL = "/login";
     private static final String LOGOUT_URL = "/logout";
 
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
 
-    public ApplicationSecurityConfiguration(PasswordEncoder passwordEncoder) {
+    private final PasswordEncoder passwordEncoder;
+    private final UserAccountDetailsService userAccountManager;
+
+    @Autowired
+    public ApplicationSecurityConfiguration(PasswordEncoder passwordEncoder,
+                                        UserAccountDetailsService userAccountManager) {
         this.passwordEncoder = passwordEncoder;
+        this.userAccountManager = userAccountManager;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authProvider());
     }
 
     @Override
@@ -64,14 +73,16 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     }
 
     @Bean
+    public DaoAuthenticationProvider authProvider() {
+        final DaoAuthenticationProvider  userAuthProvider = new DaoAuthenticationProvider ();
+        userAuthProvider.setPasswordEncoder(passwordEncoder);
+        userAuthProvider.setUserDetailsService(userAccountManager);
+        return userAuthProvider;
+    }
+
+    @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withUsername("user")
-                        .password(passwordEncoder.encode("password"))
-                        .roles("USER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user);
+        return userAccountManager;
     }
 }
