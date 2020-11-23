@@ -10,6 +10,8 @@ public interface UserAccountService {
 
     Optional<UserAccount> findByUsername(String username);
 
+    boolean isUsernameTaken(String username);
+
     void addUserAccount(UserAccount account);
 
     void deleteUserByAccountId(long id);

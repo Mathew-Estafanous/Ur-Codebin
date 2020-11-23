@@ -51,7 +51,15 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public Optional<UserAccount> findByUsername(String username) {
+        LOGGER.info("Finding Account by Username: {}", username);
         return userAccountRepository.findByUsernameEquals(username);
+    }
+
+    @Override
+    public boolean isUsernameTaken(String username) {
+        LOGGER.info("Checking to see if Username: {} is already taken", username);
+        Optional<UserAccount> account = findByUsername(username);
+        return account.isPresent();
     }
 
     private UserAccount createNewEncryptedUser(UserAccount account) {

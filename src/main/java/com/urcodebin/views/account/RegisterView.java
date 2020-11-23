@@ -137,7 +137,7 @@ public class RegisterView extends VerticalLayout {
 
     //TODO: Remove placeholder and make it request for the service to find same usernames.
     private ValidationResult usernameValidator(String username, ValueContext valueContext) {
-        boolean usernameInUse = false;
+        boolean usernameInUse = userAccountService.isUsernameTaken(username);
         if(usernameInUse) {
             return ValidationResult.error("Username is already taken.");
         }

@@ -5,9 +5,11 @@ import com.vaadin.flow.shared.ApplicationConstants;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -43,5 +45,13 @@ public class SecurityUtils {
         return authentication != null
                 && !(authentication instanceof AnonymousAuthenticationToken) //
                 && authentication.isAuthenticated();
+    }
+
+    public static String getUserCredentialsUsername() throws AuthenticationCredentialsNotFoundException {
+        if(!isUserLoggedIn()) {
+            throw new AuthenticationCredentialsNotFoundException("User Is Not Authenticated");
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ((UserDetails) authentication.getPrincipal()).getUsername();
     }
 }

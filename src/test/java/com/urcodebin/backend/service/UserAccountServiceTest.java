@@ -59,8 +59,15 @@ public class UserAccountServiceTest {
 
     @Test
     public void findWithWrongUsernameReturnsNoAccount() {
-        when(userAccountRepository.findByUsernameEquals(any(String.class))).thenReturn(Optional.empty());
+        when(userAccountRepository.findByUsernameEquals(anyString())).thenReturn(Optional.empty());
         Optional<UserAccount> invalidUserAccount = userAccountService.findByUsername("InvalidUsername");
         Assert.assertFalse(invalidUserAccount.isPresent());
+    }
+
+    @Test
+    public void whenUsernameIsTakenReturnTrue() {
+        when(userAccountRepository.findByUsernameEquals(userAccount.getUsername())).thenReturn(Optional.of(userAccount));
+        boolean isUsernameTaken = userAccountService.isUsernameTaken("Fake Username");
+        Assert.assertTrue(isUsernameTaken);
     }
 }
