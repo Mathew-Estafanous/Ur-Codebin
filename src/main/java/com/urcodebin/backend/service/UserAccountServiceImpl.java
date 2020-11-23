@@ -28,7 +28,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public Optional<UserAccount> findByAccountId(Long id) {
+    public Optional<UserAccount> findByAccountId(long id) {
         LOGGER.info("Finding UserAccount by Account Id | ID: {}", id);
         Optional<UserAccount> foundAccount = userAccountRepository.findById(id);
         if(!foundAccount.isPresent())
@@ -37,14 +37,14 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public UserAccount addUserAccount(UserAccount account) {
+    public void addUserAccount(UserAccount account) {
         UserAccount user = createNewEncryptedUser(account);
-        LOGGER.info("Adding new user account to database | ID: {}", user.getId());
-        return userAccountRepository.save(user);
+        LOGGER.info("Adding new user account to database");
+        userAccountRepository.save(user);
     }
 
     @Override
-    public void deleteUserByAccountId(Long id) {
+    public void deleteUserByAccountId(long id) {
         LOGGER.info("Deleting user account from database | ID: {}", id);
         userAccountRepository.deleteById(id);
     }

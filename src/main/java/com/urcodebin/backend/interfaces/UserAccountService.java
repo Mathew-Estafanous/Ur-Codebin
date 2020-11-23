@@ -6,11 +6,11 @@ import java.util.Optional;
 
 public interface UserAccountService {
 
-    Optional<UserAccount> findByAccountId(Long id);
+    Optional<UserAccount> findByAccountId(long id);
 
     Optional<UserAccount> findByUsername(String username);
 
-    UserAccount addUserAccount(UserAccount account);
+    void addUserAccount(UserAccount account);
 
-    void deleteUserByAccountId(Long id);
+    void deleteUserByAccountId(long id);
 }
