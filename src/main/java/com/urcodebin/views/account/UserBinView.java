@@ -1,9 +1,12 @@
 package com.urcodebin.views.account;
 
 import com.urcodebin.backend.entity.CodePaste;
+import com.urcodebin.backend.entity.UserAccount;
+import com.urcodebin.backend.interfaces.UserAccountService;
 import com.urcodebin.enumerators.PasteVisibility;
 import com.urcodebin.enumerators.SyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;
+import com.urcodebin.security.SecurityUtils;
 import com.urcodebin.views.main.MainView;
 import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.button.Button;
@@ -19,12 +22,13 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Route(value = "myBin", layout = MainView.class)
 @PageTitle("My Bin")
@@ -34,9 +38,13 @@ public class UserBinView extends VerticalLayout {
     private final Grid<CodePaste> profileBinGrid = new Grid<>(CodePaste.class);
     private final FormLayout formLayout = new FormLayout();
 
+    private final UserAccountService userAccountService;
+
     private CodePaste selectedCodePaste;
 
-    public UserBinView() {
+    @Autowired
+    public UserBinView(@Qualifier("AccountService") UserAccountService userAccountService) {
+        this.userAccountService = userAccountService;
         H1 profileUsername = new H1("TwinsRock88's Paste Bin");
         configureGrid();
         configureForm();
@@ -84,7 +92,7 @@ public class UserBinView extends VerticalLayout {
         profileBinGrid.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
         profileBinGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         profileBinGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        profileBinGrid.setDataProvider(DataProvider.ofCollection(createTempPastes()));
+        profileBinGrid.setDataProvider(DataProvider.ofCollection(getAllCodePastesByTheUser()));
         profileBinGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         addGridSelectFunctionality();
@@ -122,22 +130,17 @@ public class UserBinView extends VerticalLayout {
         return splitLayout;
     }
 
-    private List<CodePaste> createTempPastes() {
-        CodePaste first = new CodePaste();
-        first.setSourceCode("FAKE");
-        first.setSyntaxHighlighting(SyntaxHighlight.JAVA);
-        first.setPasteTitle("Fake Title");
-        first.setPasteVisibility(PasteVisibility.PUBLIC);
-        first.setPasteExpiration(LocalDateTime.now());
-        List<CodePaste> tempList = new ArrayList<>();
-        tempList.add(first);
-        CodePaste second = new CodePaste();
-        second.setSourceCode("SECOND");
-        second.setSyntaxHighlighting(SyntaxHighlight.CSHARP);
-        second.setPasteTitle("Second Title");
-        second.setPasteVisibility(PasteVisibility.PUBLIC);
-        second.setPasteExpiration(LocalDateTime.now());
-        tempList.add(second);
-        return tempList;
+    private List<CodePaste> getAllCodePastesByTheUser() {
+        String username;
+        try {
+            username = SecurityUtils.getUserCredentialsUsername();
+        } catch (AuthenticationCredentialsNotFoundException e) {
+            return Collections.emptyList();
+        }
+        Optional<UserAccount> userAccount = userAccountService.findByUsername(username);
+        if(!userAccount.isPresent()) {
+            return Collections.emptyList();
+        }
+        return userAccount.get().getCodePastes();
     }
 }

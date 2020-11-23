@@ -135,7 +135,6 @@ public class RegisterView extends VerticalLayout {
         PageRouter.routeToPage(LoginView.class);
     }
 
-    //TODO: Remove placeholder and make it request for the service to find same usernames.
     private ValidationResult usernameValidator(String username, ValueContext valueContext) {
         boolean usernameInUse = userAccountService.isUsernameTaken(username);
         if(usernameInUse) {

@@ -1,12 +1,15 @@
 package com.urcodebin.views.paste;
 
 import com.urcodebin.backend.entity.CodePaste;
+import com.urcodebin.backend.entity.UserAccount;
 import com.urcodebin.backend.interfaces.PasteService;
+import com.urcodebin.backend.interfaces.UserAccountService;
 import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.SyntaxHighlight;
 import com.urcodebin.enumerators.PasteVisibility;
 import com.urcodebin.helpers.PageRouter;
+import com.urcodebin.security.SecurityUtils;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -27,6 +30,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
 
 import java.util.EnumSet;
+import java.util.Optional;
 
 @Route(value = "", layout = MainView.class)
 @PageTitle("+ Paste")
@@ -44,7 +48,8 @@ public class PasteView extends Div {
 
     private final Binder<CodePaste> binder = new Binder<>(CodePaste.class);
 
-    public PasteView(@Qualifier("PasteService") PasteService pasteService) {
+    public PasteView(@Qualifier("PasteService") PasteService pasteService,
+                     @Qualifier("AccountService") UserAccountService userAccountService) {
         setId("paste-view");
 
         setupSourceCodeTextArea();
@@ -66,9 +71,23 @@ public class PasteView extends Div {
 
         undo.addClickListener(e -> clearForm());
         upload.addClickListener(e -> {
-            CodePaste codePaste = pasteService.createNewPaste(binder.getBean());
-            navigateToCodeView(codePaste);
+            createNewCodePaste(pasteService, userAccountService);
         });
+    }
+
+    private void createNewCodePaste(PasteService pasteService, UserAccountService userAccountService) {
+        CodePaste newPaste = binder.getBean();
+        setUserAccountIfLoggedIn(userAccountService, newPaste);
+        CodePaste codePaste = pasteService.createNewPaste(newPaste);
+        navigateToCodeView(codePaste);
+    }
+
+    private void setUserAccountIfLoggedIn(UserAccountService userAccountService, CodePaste newPaste) {
+        if(SecurityUtils.isUserLoggedIn()) {
+            String username = SecurityUtils.getUserCredentialsUsername();
+            Optional<UserAccount> userAccount = userAccountService.findByUsername(username);
+            userAccount.ifPresent(newPaste::setUserAccount);
+        }
     }
 
     private void navigateToCodeView(CodePaste codePaste) {

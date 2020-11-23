@@ -40,7 +40,7 @@ public class SecurityUtils {
                 .anyMatch(allowedRoles::contains);
     }
 
-    static boolean isUserLoggedIn() {
+    public static boolean isUserLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null
                 && !(authentication instanceof AnonymousAuthenticationToken) //
