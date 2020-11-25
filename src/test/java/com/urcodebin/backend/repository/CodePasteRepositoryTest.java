@@ -27,7 +27,7 @@ public class CodePasteRepositoryTest {
     private UUID javaWindowCodePasteUUID;
     private UUID csharpCodePasteUUID;
     private LocalDateTime testDateTime;
-    private int totalPrivatePastes = 1;
+    private final int totalPrivatePastes = 1;
 
     @Before
     public void setup() {

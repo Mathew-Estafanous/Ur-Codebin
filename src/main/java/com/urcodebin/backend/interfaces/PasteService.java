@@ -15,4 +15,6 @@ public interface PasteService {
     List<CodePaste> findAllPublicPastes();
 
     List<CodePaste> findAllPublicPastesWithTitle(String title);
+
+    void deletePasteById(UUID pasteId);
 }

@@ -50,4 +50,10 @@ public class PasteServiceImpl implements PasteService {
         LOGGER.info("Finding all public CodePastes with {} in Paste Title", title);
         return codePasteRepository.findByPasteTitleContainsAndPasteVisibilityIs(title, PasteVisibility.PUBLIC);
     }
+
+    @Override
+    public void deletePasteById(UUID pasteId) {
+        LOGGER.info("Deleting CodePaste with ID: {}", pasteId.toString());
+        codePasteRepository.deleteById(pasteId);
+    }
 }
