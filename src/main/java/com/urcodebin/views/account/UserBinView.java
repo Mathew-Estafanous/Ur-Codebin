@@ -2,50 +2,58 @@ package com.urcodebin.views.account;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.entity.UserAccount;
+import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.backend.interfaces.UserAccountService;
-import com.urcodebin.enumerators.PasteVisibility;
-import com.urcodebin.enumerators.SyntaxHighlight;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.security.SecurityUtils;
 import com.urcodebin.views.main.MainView;
 import com.urcodebin.views.paste.CodeView;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Route(value = "myBin", layout = MainView.class)
 @PageTitle("My Bin")
 @Secured("ROLE_USER")
+@JsModule("./styles/copytoclipboard.js")
 public class UserBinView extends VerticalLayout {
 
     private final Grid<CodePaste> profileBinGrid = new Grid<>(CodePaste.class);
     private final FormLayout formLayout = new FormLayout();
 
     private final UserAccountService userAccountService;
+    private final PasteService pasteService;
 
     private CodePaste selectedCodePaste;
 
     @Autowired
-    public UserBinView(@Qualifier("AccountService") UserAccountService userAccountService) {
+    public UserBinView(@Qualifier("AccountService") UserAccountService userAccountService,
+                    @Qualifier("PasteService") PasteService pasteService) {
         this.userAccountService = userAccountService;
-        H1 profileUsername = new H1("TwinsRock88's Paste Bin");
+        this.pasteService = pasteService;
+        H1 profileUsername = new H1(getProfileUsername() + "'s Paste Bin");
         configureGrid();
         configureForm();
         SplitLayout splitLayout = createSplitLayout();
@@ -70,12 +78,17 @@ public class UserBinView extends VerticalLayout {
 
     private void addListenerForCopyLinkBtn(Button copyBtn) {
         copyBtn.addClickListener(event -> {
-            System.out.println("COPYING THE LINK FOR THE PAGE");
+            String pasteUrlPath = getPasteUrlPath();
+            UI.getCurrent().getPage().executeJs("window.copyToClipboard($0)", pasteUrlPath);
+
+            Notification copiedNotification = Notification.show("Paste Url has been copied to your clipboard!");
+            copiedNotification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         });
     }
     private void addListenerForDeleteBtn(Button deleteBtn) {
         deleteBtn.addClickListener(event -> {
-            System.out.println("DELETING THE PASTE");
+            pasteService.deletePasteById(selectedCodePaste.getPasteId());
+            profileBinGrid.setItems(getAllCodePastesByTheUser());
         });
     }
 
@@ -92,7 +105,7 @@ public class UserBinView extends VerticalLayout {
         profileBinGrid.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
         profileBinGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         profileBinGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        profileBinGrid.setDataProvider(DataProvider.ofCollection(getAllCodePastesByTheUser()));
+        profileBinGrid.setItems(getAllCodePastesByTheUser());
         profileBinGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         addGridSelectFunctionality();
@@ -102,10 +115,10 @@ public class UserBinView extends VerticalLayout {
         profileBinGrid.asSingleSelect().addValueChangeListener(event -> {
            if(event.getValue() != null) {
                Optional<CodePaste> selectedPaste = profileBinGrid.getSelectedItems().stream().findFirst();
-               if(selectedPaste.isPresent()) {
+               selectedPaste.ifPresent(paste -> {
                    setButtonsEnabled(true);
-                   selectedCodePaste = selectedPaste.get();
-               }
+                   selectedCodePaste = paste;
+               });
            } else
                setButtonsEnabled(false);
         });
@@ -131,16 +144,31 @@ public class UserBinView extends VerticalLayout {
     }
 
     private List<CodePaste> getAllCodePastesByTheUser() {
-        String username;
-        try {
-            username = SecurityUtils.getUserCredentialsUsername();
-        } catch (AuthenticationCredentialsNotFoundException e) {
+        String username = getProfileUsername();
+        if(username.isEmpty())
             return Collections.emptyList();
-        }
         Optional<UserAccount> userAccount = userAccountService.findByUsername(username);
         if(!userAccount.isPresent()) {
             return Collections.emptyList();
         }
         return userAccount.get().getCodePastes();
+    }
+
+    private String getProfileUsername() {
+        String username;
+        try {
+            username = SecurityUtils.getUserCredentialsUsername();
+        } catch (AuthenticationCredentialsNotFoundException e) {
+            return "";
+        }
+        return username;
+    }
+
+    private String getPasteUrlPath() {
+        String startPath = ((VaadinServletRequest) VaadinService.getCurrentRequest()).getHttpServletRequest()
+                .getRequestURL().toString();
+        String codeViewUrl = RouteConfiguration.forSessionScope().getUrl(CodeView.class);
+        String codePasteId = selectedCodePaste.getPasteId().toString();
+        return startPath.concat(codeViewUrl).concat("/").concat(codePasteId);
     }
 }
