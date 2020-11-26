@@ -8,10 +8,10 @@
   <p align="center">
     Simple and easy to use code paste bin that allows easy code sharing!
     <br />
-    <a href="https://github.com/Mathew-Estafanous/Ur-Codebin"><strong>Explore the docs »</strong></a>
+    <a href="https://urcodebin.live/"><strong>View The Website »</strong></a>
     <br />
     <br />
-    <a href="http://ec2-3-83-155-200.compute-1.amazonaws.com/">View Demo</a>
+    <a href="https://github.com/Mathew-Estafanous/Ur-Codebin">Explore the docs</a>
     ·
     <a href="https://github.com/Mathew-Estafanous/Ur-Codebin/issues">Report Bug</a>
     ·
