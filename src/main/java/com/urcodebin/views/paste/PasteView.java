@@ -5,6 +5,7 @@ import com.urcodebin.backend.entity.UserAccount;
 import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.backend.interfaces.UserAccountService;
 import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
+import com.urcodebin.enumerators.HasStringValue;
 import com.urcodebin.enumerators.PasteExpiration;
 import com.urcodebin.enumerators.PasteSyntax;
 import com.urcodebin.enumerators.PasteVisibility;
@@ -53,9 +54,9 @@ public class PasteView extends Div {
 
         setupSourceCodeTextArea();
         setupCodeTitleTextField();
-        setupSyntaxHighlightDopBox();
-        setupCodeExpirationDropBox();
-        setupPasteVisibilityDropBox();
+        setupComboBox(pasteSyntax, PasteSyntax.class);
+        setupComboBox(pasteExpiration, PasteExpiration.class);
+        setupComboBox(pasteVisibility, PasteVisibility.class);
 
         add(createTitle());
         add(new Hr());
@@ -97,25 +98,11 @@ public class PasteView extends Div {
         pasteTitle.setMaxLength(60);
     }
 
-    private void setupPasteVisibilityDropBox() {
-        pasteVisibility.setItemLabelGenerator(PasteVisibility::getValue);
-        pasteVisibility.setItems(EnumSet.allOf(PasteVisibility.class));
-        pasteVisibility.setRequired(true);
-        pasteVisibility.setAllowCustomValue(false);
-    }
-
-    private void setupCodeExpirationDropBox() {
-        pasteExpiration.setItemLabelGenerator(PasteExpiration::getValue);
-        pasteExpiration.setItems(EnumSet.allOf(PasteExpiration.class));
-        pasteExpiration.setRequired(true);
-        pasteExpiration.setAllowCustomValue(false);
-    }
-
-    private void setupSyntaxHighlightDopBox() {
-        pasteSyntax.setItemLabelGenerator(PasteSyntax::getValue);
-        pasteSyntax.setItems(EnumSet.allOf(PasteSyntax.class));
-        pasteSyntax.setRequired(true);
-        pasteSyntax.setAllowCustomValue(false);
+    private <E extends Enum<E> & HasStringValue> void setupComboBox(ComboBox<E> comboBox, Class<E> enumType) {
+        comboBox.setItemLabelGenerator(HasStringValue::getStringValue);
+        comboBox.setItems(EnumSet.allOf(enumType));
+        comboBox.setRequired(true);
+        comboBox.setAllowCustomValue(false);
     }
 
     private void setupSourceCodeTextArea() {

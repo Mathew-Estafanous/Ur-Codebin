@@ -18,7 +18,7 @@ public class StringToPasteSyntaxTest {
 
         Arrays.stream(PasteSyntax.values())
             .forEach(pasteSyntax -> {
-                String val = pasteSyntax.getValue();
+                String val = pasteSyntax.getStringValue();
                 Assert.assertEquals(pasteSyntax, converter.convertToModel(val ,new ValueContext())
                             .getOrThrow(AssertionError::new));
             });
@@ -28,7 +28,7 @@ public class StringToPasteSyntaxTest {
     public void convertToStringWorks() {
         Arrays.stream(PasteSyntax.values())
             .forEach(pasteSyntax -> {
-                String expectedResult = pasteSyntax.getValue();
+                String expectedResult = pasteSyntax.getStringValue();
                 Assert.assertEquals(expectedResult, converter.convertToPresentation(pasteSyntax, new ValueContext()));
             });
     }

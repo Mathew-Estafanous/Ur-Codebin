@@ -1,6 +1,6 @@
 package com.urcodebin.enumerators;
 
-public enum PasteExpiration {
+public enum PasteExpiration implements HasStringValue {
     TENMINUTES ("10 Minutes", 10),
     THIRTYMINUTES ("30 Minutes", 30),
     ONEHOUR ("1 Hour", 60),
@@ -15,7 +15,7 @@ public enum PasteExpiration {
         this.offsetMin = offsetMin;
     }
 
-    public String getValue(){
+    public String getStringValue(){
         return value;
     }
 

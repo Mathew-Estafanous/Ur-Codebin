@@ -1,6 +1,6 @@
 package com.urcodebin.enumerators;
 
-public enum PasteSyntax {
+public enum PasteSyntax implements HasStringValue {
     NONE ("None"),
     JAVA ("Java"),
     CSHARP ("C#"),
@@ -20,7 +20,7 @@ public enum PasteSyntax {
         this.value = value;
     }
 
-    public String getValue() {
+    public String getStringValue() {
         return value;
     }
 }

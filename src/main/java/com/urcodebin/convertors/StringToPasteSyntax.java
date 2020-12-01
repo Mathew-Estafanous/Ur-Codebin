@@ -20,12 +20,12 @@ public class StringToPasteSyntax implements Converter<String, PasteSyntax> {
 
     @Override
     public String convertToPresentation(PasteSyntax pasteSyntax, ValueContext valueContext) {
-        return (pasteSyntax != null)? pasteSyntax.getValue(): null;
+        return (pasteSyntax != null)? pasteSyntax.getStringValue(): null;
     }
 
     private PasteSyntax getByEnumValue(String s) {
         return Arrays.stream(PasteSyntax.values())
-                .filter(enumVal -> enumVal.getValue().equals(s))
+                .filter(enumVal -> enumVal.getStringValue().equals(s))
                 .findFirst()
                 .orElse(PasteSyntax.NONE);
     }
