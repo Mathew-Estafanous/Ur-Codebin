@@ -2,7 +2,7 @@ package com.urcodebin.backend.service;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.repository.CodePasteRepository;
-import com.urcodebin.enumerators.SyntaxHighlight;
+import com.urcodebin.enumerators.PasteSyntax;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class ExpirationServiceTest {
         tempPaste.setPasteExpiration(LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
                 .minusHours(1));
         tempPaste.setPasteTitle("Test Paste Title");
-        tempPaste.setSyntaxHighlighting(SyntaxHighlight.JAVA);
+        tempPaste.setPasteSyntax(PasteSyntax.JAVA);
         listOfExpired.add(tempPaste);
     }
 

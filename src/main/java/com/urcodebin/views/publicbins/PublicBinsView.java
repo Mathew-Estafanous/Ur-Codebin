@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.convertors.StringToLocalDateTime;
-import com.urcodebin.convertors.StringToSyntaxHighlight;
+import com.urcodebin.convertors.StringToPasteSyntax;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.AbstractField;
@@ -41,7 +41,7 @@ public class PublicBinsView extends Div {
 
     private final TextField pasteId = new TextField();
     private final TextField pasteTitle = new TextField();
-    private final TextField syntaxHighlighting = new TextField();
+    private final TextField pasteSyntax = new TextField();
     private final TextField codeExpiration = new TextField();
 
     private final Button clear = new Button("Clear");
@@ -101,9 +101,9 @@ public class PublicBinsView extends Div {
                 .withConverter(new StringToUuidConverter("Must Be a UUID"))
                 .bind(CodePaste::getPasteId, null);
 
-        binder.forField(syntaxHighlighting)
-                .withConverter(new StringToSyntaxHighlight())
-                .bind(CodePaste::getSyntaxHighlighting, CodePaste::setSyntaxHighlighting);
+        binder.forField(pasteSyntax)
+                .withConverter(new StringToPasteSyntax())
+                .bind(CodePaste::getPasteSyntax, CodePaste::setPasteSyntax);
 
         binder.forField(codeExpiration)
                 .withConverter(new StringToLocalDateTime())
@@ -128,7 +128,7 @@ public class PublicBinsView extends Div {
     }
 
     private void configureGrid() {
-        grid.setColumns("pasteTitle", "pasteId", "syntaxHighlighting", "pasteExpiration");
+        grid.setColumns("pasteTitle", "pasteId", "pasteSyntax", "pasteExpiration");
         grid.setDataProvider(DataProvider.ofCollection(pasteService.findAllPublicPastes()));
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setHeightFull();
@@ -146,7 +146,7 @@ public class PublicBinsView extends Div {
         makeAllFieldsReadOnly();
         addFormItem(editorDiv, formLayout, pasteTitle, "Paste Title");
         addFormItem(editorDiv, formLayout, pasteId, "Paste ID");
-        addFormItem(editorDiv, formLayout, syntaxHighlighting, "Syntax Highlight");
+        addFormItem(editorDiv, formLayout, pasteSyntax, "Syntax Highlight");
         addFormItem(editorDiv, formLayout, codeExpiration, "Code Expiration");
         createButtonLayout(editorLayoutDiv);
 
@@ -155,7 +155,7 @@ public class PublicBinsView extends Div {
 
     private void makeAllFieldsReadOnly() {
         pasteTitle.setReadOnly(true);
-        syntaxHighlighting.setReadOnly(true);
+        pasteSyntax.setReadOnly(true);
         codeExpiration.setReadOnly(true);
         pasteId.setReadOnly(true);
     }

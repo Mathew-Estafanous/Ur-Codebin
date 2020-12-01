@@ -101,7 +101,7 @@ public class UserBinView extends VerticalLayout {
     }
 
     private void configureGrid() {
-        profileBinGrid.setColumns("pasteTitle", "pasteId", "syntaxHighlighting", "pasteVisibility");
+        profileBinGrid.setColumns("pasteTitle", "pasteId", "pasteSyntax", "pasteVisibility");
         profileBinGrid.setDropMode(GridDropMode.ON_TOP_OR_BETWEEN);
         profileBinGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         profileBinGrid.setSelectionMode(Grid.SelectionMode.SINGLE);

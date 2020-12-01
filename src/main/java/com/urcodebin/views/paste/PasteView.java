@@ -6,7 +6,7 @@ import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.backend.interfaces.UserAccountService;
 import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
 import com.urcodebin.enumerators.PasteExpiration;
-import com.urcodebin.enumerators.SyntaxHighlight;
+import com.urcodebin.enumerators.PasteSyntax;
 import com.urcodebin.enumerators.PasteVisibility;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.security.SecurityUtils;
@@ -27,7 +27,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.urcodebin.views.main.MainView;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.annotation.Secured;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -39,7 +38,7 @@ public class PasteView extends Div {
 
     private final TextArea sourceCode = new TextArea("Source Code");
     private final TextField pasteTitle = new TextField("Code Title");
-    private final ComboBox<SyntaxHighlight> syntaxHighlighting = new ComboBox<>("Syntax Highlighting");
+    private final ComboBox<PasteSyntax> pasteSyntax = new ComboBox<>("Syntax Highlighting");
     private final ComboBox<PasteExpiration> pasteExpiration = new ComboBox<>("Code Expiration");
     private final ComboBox<PasteVisibility> pasteVisibility = new ComboBox<>("Paste Visibility");
     
@@ -113,10 +112,10 @@ public class PasteView extends Div {
     }
 
     private void setupSyntaxHighlightDopBox() {
-        syntaxHighlighting.setItemLabelGenerator(SyntaxHighlight::getValue);
-        syntaxHighlighting.setItems(EnumSet.allOf(SyntaxHighlight.class));
-        syntaxHighlighting.setRequired(true);
-        syntaxHighlighting.setAllowCustomValue(false);
+        pasteSyntax.setItemLabelGenerator(PasteSyntax::getValue);
+        pasteSyntax.setItems(EnumSet.allOf(PasteSyntax.class));
+        pasteSyntax.setRequired(true);
+        pasteSyntax.setAllowCustomValue(false);
     }
 
     private void setupSourceCodeTextArea() {
@@ -134,7 +133,7 @@ public class PasteView extends Div {
     private void setDefaultSettings() {
         pasteTitle.setValue("Untitled Code");
         pasteExpiration.setValue(PasteExpiration.TENMINUTES);
-        syntaxHighlighting.setValue(SyntaxHighlight.NONE);
+        pasteSyntax.setValue(PasteSyntax.NONE);
         pasteVisibility.setValue(PasteVisibility.PRIVATE);
     }
 
@@ -149,7 +148,7 @@ public class PasteView extends Div {
                 new FormLayout.ResponsiveStep("500px", 2)
         );
         formLayout.setColspan(sourceCode, 2);
-        formLayout.add(sourceCode, syntaxHighlighting, pasteExpiration, pasteTitle, pasteVisibility);
+        formLayout.add(sourceCode, pasteSyntax, pasteExpiration, pasteTitle, pasteVisibility);
         return formLayout;
     }
 
