@@ -3,7 +3,7 @@ package com.urcodebin.views.paste;
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.convertors.StringToLocalDateTime;
-import com.urcodebin.convertors.StringToSyntaxHighlight;
+import com.urcodebin.convertors.StringToPasteSyntax;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.Component;
@@ -32,7 +32,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
 
     private final TextArea sourceCode = new TextArea("Source Code");
     private final Label syntaxLabel = new Label("Syntax Highlighting:");
-    private final TextField syntaxHighlight = new TextField();
+    private final TextField pasteSyntax = new TextField();
     private final Label expirationLabel = new Label("Code Expiration:");
     private final TextField codeExpirationDate = new TextField();
     private final H2 pasteTitle = new H2("Paste Title");
@@ -67,9 +67,9 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         binder.forField(codeExpirationDate)
                 .withConverter(new StringToLocalDateTime())
                 .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
-        binder.forField(syntaxHighlight)
-                .withConverter(new StringToSyntaxHighlight())
-                .bind(CodePaste::getSyntaxHighlighting, CodePaste::setSyntaxHighlighting);
+        binder.forField(pasteSyntax)
+                .withConverter(new StringToPasteSyntax())
+                .bind(CodePaste::getPasteSyntax, CodePaste::setPasteSyntax);
         binder.bindInstanceFields(this);
     }
 
@@ -101,7 +101,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
 
     private Component createChosenOptionsView() {
         return new HorizontalLayout(
-                syntaxLabel, syntaxHighlight,
+                syntaxLabel, pasteSyntax,
                 expirationLabel, codeExpirationDate
         );
     }
@@ -122,7 +122,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
     }
 
     private Component setupTitleView() {
-        syntaxHighlight.setReadOnly(true);
+        pasteSyntax.setReadOnly(true);
         codeExpirationDate.setReadOnly(true);
         Div headerDiv= new Div();
         headerDiv.add(pasteTitle);

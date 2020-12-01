@@ -5,8 +5,9 @@ import com.urcodebin.backend.entity.UserAccount;
 import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.backend.interfaces.UserAccountService;
 import com.urcodebin.convertors.PasteExpirationToLocalDateTime;
+import com.urcodebin.enumerators.HasStringValue;
 import com.urcodebin.enumerators.PasteExpiration;
-import com.urcodebin.enumerators.SyntaxHighlight;
+import com.urcodebin.enumerators.PasteSyntax;
 import com.urcodebin.enumerators.PasteVisibility;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.security.SecurityUtils;
@@ -27,7 +28,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.urcodebin.views.main.MainView;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.annotation.Secured;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class PasteView extends Div {
 
     private final TextArea sourceCode = new TextArea("Source Code");
     private final TextField pasteTitle = new TextField("Code Title");
-    private final ComboBox<SyntaxHighlight> syntaxHighlighting = new ComboBox<>("Syntax Highlighting");
+    private final ComboBox<PasteSyntax> pasteSyntax = new ComboBox<>("Syntax Highlighting");
     private final ComboBox<PasteExpiration> pasteExpiration = new ComboBox<>("Code Expiration");
     private final ComboBox<PasteVisibility> pasteVisibility = new ComboBox<>("Paste Visibility");
     
@@ -54,9 +54,9 @@ public class PasteView extends Div {
 
         setupSourceCodeTextArea();
         setupCodeTitleTextField();
-        setupSyntaxHighlightDopBox();
-        setupCodeExpirationDropBox();
-        setupPasteVisibilityDropBox();
+        setupComboBox(pasteSyntax, PasteSyntax.class);
+        setupComboBox(pasteExpiration, PasteExpiration.class);
+        setupComboBox(pasteVisibility, PasteVisibility.class);
 
         add(createTitle());
         add(new Hr());
@@ -98,25 +98,11 @@ public class PasteView extends Div {
         pasteTitle.setMaxLength(60);
     }
 
-    private void setupPasteVisibilityDropBox() {
-        pasteVisibility.setItemLabelGenerator(PasteVisibility::getValue);
-        pasteVisibility.setItems(EnumSet.allOf(PasteVisibility.class));
-        pasteVisibility.setRequired(true);
-        pasteVisibility.setAllowCustomValue(false);
-    }
-
-    private void setupCodeExpirationDropBox() {
-        pasteExpiration.setItemLabelGenerator(PasteExpiration::getValue);
-        pasteExpiration.setItems(EnumSet.allOf(PasteExpiration.class));
-        pasteExpiration.setRequired(true);
-        pasteExpiration.setAllowCustomValue(false);
-    }
-
-    private void setupSyntaxHighlightDopBox() {
-        syntaxHighlighting.setItemLabelGenerator(SyntaxHighlight::getValue);
-        syntaxHighlighting.setItems(EnumSet.allOf(SyntaxHighlight.class));
-        syntaxHighlighting.setRequired(true);
-        syntaxHighlighting.setAllowCustomValue(false);
+    private <E extends Enum<E> & HasStringValue> void setupComboBox(ComboBox<E> comboBox, Class<E> enumType) {
+        comboBox.setItemLabelGenerator(HasStringValue::getStringValue);
+        comboBox.setItems(EnumSet.allOf(enumType));
+        comboBox.setRequired(true);
+        comboBox.setAllowCustomValue(false);
     }
 
     private void setupSourceCodeTextArea() {
@@ -134,7 +120,7 @@ public class PasteView extends Div {
     private void setDefaultSettings() {
         pasteTitle.setValue("Untitled Code");
         pasteExpiration.setValue(PasteExpiration.TENMINUTES);
-        syntaxHighlighting.setValue(SyntaxHighlight.NONE);
+        pasteSyntax.setValue(PasteSyntax.NONE);
         pasteVisibility.setValue(PasteVisibility.PRIVATE);
     }
 
@@ -149,7 +135,7 @@ public class PasteView extends Div {
                 new FormLayout.ResponsiveStep("500px", 2)
         );
         formLayout.setColspan(sourceCode, 2);
-        formLayout.add(sourceCode, syntaxHighlighting, pasteExpiration, pasteTitle, pasteVisibility);
+        formLayout.add(sourceCode, pasteSyntax, pasteExpiration, pasteTitle, pasteVisibility);
         return formLayout;
     }
 

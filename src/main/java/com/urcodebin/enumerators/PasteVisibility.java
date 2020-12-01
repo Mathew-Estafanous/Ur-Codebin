@@ -1,6 +1,6 @@
 package com.urcodebin.enumerators;
 
-public enum PasteVisibility {
+public enum PasteVisibility implements HasStringValue {
     PUBLIC ("Public"),
     PRIVATE ("Private");
 
@@ -9,7 +9,7 @@ public enum PasteVisibility {
         this.value = value;
     }
 
-    public String getValue() {
+    public String getStringValue() {
         return value;
     }
 }

@@ -1,6 +1,6 @@
 package com.urcodebin.backend.entity;
 
-import com.urcodebin.enumerators.SyntaxHighlight;
+import com.urcodebin.enumerators.PasteSyntax;
 import com.urcodebin.enumerators.PasteVisibility;
 
 import javax.persistence.*;
@@ -29,8 +29,8 @@ public class CodePaste {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "syntax_highlighting")
-    private SyntaxHighlight syntaxHighlighting;
+    @Column(name = "paste_syntax")
+    private PasteSyntax pasteSyntax;
 
     @NotNull
     @Column(name = "paste_Expiration")
@@ -53,13 +53,13 @@ public class CodePaste {
         return pasteId.equals(codePaste.pasteId) &&
                 sourceCode.equals(codePaste.sourceCode) &&
                 Objects.equals(pasteTitle, codePaste.pasteTitle) &&
-                syntaxHighlighting.equals(codePaste.syntaxHighlighting) &&
+                pasteSyntax.equals(codePaste.pasteSyntax) &&
                 pasteExpirationDate.equals(codePaste.pasteExpirationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pasteId, sourceCode, pasteTitle, syntaxHighlighting, pasteExpirationDate);
+        return Objects.hash(pasteId, sourceCode, pasteTitle, pasteSyntax, pasteExpirationDate);
     }
 
     public UUID getPasteId() {
@@ -82,12 +82,12 @@ public class CodePaste {
         this.pasteTitle = pasteTitle;
     }
 
-    public SyntaxHighlight getSyntaxHighlighting() {
-        return syntaxHighlighting;
+    public PasteSyntax getPasteSyntax() {
+        return pasteSyntax;
     }
 
-    public void setSyntaxHighlighting(SyntaxHighlight syntaxHighlighting) {
-        this.syntaxHighlighting = syntaxHighlighting;
+    public void setPasteSyntax(PasteSyntax pasteSyntax) {
+        this.pasteSyntax = pasteSyntax;
     }
 
     public LocalDateTime getPasteExpiration() {
