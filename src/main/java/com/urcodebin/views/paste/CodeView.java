@@ -31,7 +31,7 @@ import java.util.UUID;
 public class CodeView extends Div implements HasUrlParameter<String> {
 
     private final TextArea sourceCode = new TextArea("Source Code");
-    private final Label syntaxLabel = new Label("Syntax Highlighting:");
+    private final Label syntaxLabel = new Label("Paste Syntax:");
     private final TextField pasteSyntax = new TextField();
     private final Label expirationLabel = new Label("Code Expiration:");
     private final TextField codeExpirationDate = new TextField();
