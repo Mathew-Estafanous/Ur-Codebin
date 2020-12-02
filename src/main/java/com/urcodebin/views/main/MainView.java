@@ -27,7 +27,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinServlet;
 import com.vaadin.flow.theme.Theme;
-import com.urcodebin.views.paste.PasteView;
+import com.urcodebin.views.paste.UploadPasteView;
 import com.urcodebin.views.publicbins.PublicBinsView;
 import com.vaadin.flow.theme.lumo.Lumo;
 
@@ -91,7 +91,7 @@ public class MainView extends AppLayout {
 
     private static Tab[] getAvailableTabs() {
         final List<Tab> availableTabs = new ArrayList<>();
-        availableTabs.add(createTab(PASTE_TITLE, VaadinIcon.EDIT, PasteView.class));
+        availableTabs.add(createTab(PASTE_TITLE, VaadinIcon.EDIT, UploadPasteView.class));
         availableTabs.add(createTab(PUBLIC_BIN_TITLE, VaadinIcon.BROWSER, PublicBinsView.class));
 
         if(SecurityUtils.isAccessGranted(UserBinView.class)) {

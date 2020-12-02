@@ -35,7 +35,7 @@ import java.util.Optional;
 @Route(value = "", layout = MainView.class)
 @PageTitle("+ Paste")
 @CssImport("./styles/views/paste/paste-view.css")
-public class PasteView extends Div {
+public class UploadPasteView extends Div {
 
     private final TextArea sourceCode = new TextArea("Source Code");
     private final TextField pasteTitle = new TextField("Code Title");
@@ -48,8 +48,8 @@ public class PasteView extends Div {
 
     private final Binder<CodePaste> binder = new Binder<>(CodePaste.class);
 
-    public PasteView(@Qualifier("PasteService") PasteService pasteService,
-                     @Qualifier("AccountService") UserAccountService userAccountService) {
+    public UploadPasteView(@Qualifier("PasteService") PasteService pasteService,
+                           @Qualifier("AccountService") UserAccountService userAccountService) {
         setId("paste-view");
 
         setupSourceCodeTextArea();
