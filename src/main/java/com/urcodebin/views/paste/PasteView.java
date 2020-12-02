@@ -39,7 +39,7 @@ public class PasteView extends Div {
 
     private final TextArea sourceCode = new TextArea("Source Code");
     private final TextField pasteTitle = new TextField("Code Title");
-    private final ComboBox<PasteSyntax> pasteSyntax = new ComboBox<>("Syntax Highlighting");
+    private final ComboBox<PasteSyntax> pasteSyntax = new ComboBox<>("Paste Syntax");
     private final ComboBox<PasteExpiration> pasteExpiration = new ComboBox<>("Code Expiration");
     private final ComboBox<PasteVisibility> pasteVisibility = new ComboBox<>("Paste Visibility");
     
