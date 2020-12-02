@@ -94,7 +94,7 @@ public class CodeView extends Div implements HasUrlParameter<String> {
     }
 
     private void routeBackToMainPageAndNotifyUser() {
-        PageRouter.routeToPage(PasteView.class);
+        PageRouter.routeToPage(UploadPasteView.class);
         Notification.show("We received an invalid ID and re-routed you back to the home page. " +
                 "Please retry with a valid ID.");
     }
