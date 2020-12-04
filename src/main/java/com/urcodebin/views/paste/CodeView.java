@@ -7,12 +7,17 @@ import com.urcodebin.convertors.StringToPasteSyntax;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -28,6 +33,7 @@ import java.util.UUID;
 @Route(value = "view", layout = MainView.class)
 @PageTitle("Code View")
 @CssImport("./styles/views/paste/code-view.css")
+@JsModule("./styles/copytoclipboard.js")
 public class CodeView extends Div implements HasUrlParameter<String> {
 
     private final TextArea sourceCode = new TextArea("Source Code");
@@ -47,7 +53,8 @@ public class CodeView extends Div implements HasUrlParameter<String> {
 
         add(setupTitleView());
         add(new Hr());
-        add(createChosenOptionsView());
+//        add(createChosenOptionsView());
+        add(createButtonViews());
         add(createCodeView());
 
         createBinderForFields();
@@ -97,6 +104,30 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         PageRouter.routeToPage(UploadPasteView.class);
         Notification.show("We received an invalid ID and re-routed you back to the home page. " +
                 "Please retry with a valid ID.");
+    }
+
+    private Component createButtonViews() {
+        Button copyCodeBtn = new Button("Copy Raw Code");
+        copyCodeBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        copyCodeBtn.addClickListener(e -> {
+            String sourceCode = binder.getBean().getSourceCode();
+            copyToClipboard(sourceCode, "Source Code Copied To Clipboard!");
+        });
+
+        Button getShareLinkBtn = new Button("Get Share Link");
+        getShareLinkBtn.addClickListener(e -> {
+            String pasteId = binder.getBean().getPasteId().toString();
+            String pathToCurrentUrl = PageRouter.getRouteToPage(CodeView.class, pasteId);
+            copyToClipboard(pathToCurrentUrl, "Shareable Link Copied To Clipboard!");
+        });
+        getShareLinkBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        return new HorizontalLayout(copyCodeBtn, getShareLinkBtn);
+    }
+
+    private void copyToClipboard(String toCopy, String successMsg) {
+        UI.getCurrent().getPage().executeJs("window.copyToClipboard($0)", toCopy);
+        Notification copiedNotification = Notification.show(successMsg);
+        copiedNotification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
     }
 
     private Component createChosenOptionsView() {

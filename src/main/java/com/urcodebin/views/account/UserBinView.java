@@ -24,9 +24,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteConfiguration;
-import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
@@ -78,7 +75,7 @@ public class UserBinView extends VerticalLayout {
 
     private void addListenerForCopyLinkBtn(Button copyBtn) {
         copyBtn.addClickListener(event -> {
-            String pasteUrlPath = getPasteUrlPath();
+            String pasteUrlPath = PageRouter.getRouteToPage(CodeView.class, selectedCodePaste.getPasteId().toString());
             UI.getCurrent().getPage().executeJs("window.copyToClipboard($0)", pasteUrlPath);
 
             Notification copiedNotification = Notification.show("Paste Url has been copied to your clipboard!");
@@ -162,13 +159,5 @@ public class UserBinView extends VerticalLayout {
             return "";
         }
         return username;
-    }
-
-    private String getPasteUrlPath() {
-        String startPath = ((VaadinServletRequest) VaadinService.getCurrentRequest()).getHttpServletRequest()
-                .getRequestURL().toString();
-        String codeViewUrl = RouteConfiguration.forSessionScope().getUrl(CodeView.class);
-        String codePasteId = selectedCodePaste.getPasteId().toString();
-        return startPath.concat(codeViewUrl).concat("/").concat(codePasteId);
     }
 }

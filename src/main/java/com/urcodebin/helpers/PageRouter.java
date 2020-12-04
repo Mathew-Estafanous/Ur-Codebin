@@ -1,8 +1,12 @@
 package com.urcodebin.helpers;
 
+import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,5 +29,12 @@ public class PageRouter {
         currentUI.access(() -> {
             currentUI.getUI().ifPresent(ui -> ui.navigate(page));
         });
+    }
+
+    public static <C extends Component> String getRouteToPage(Class<? extends C> pagePath, String parameter) {
+        String startPath = ((VaadinServletRequest) VaadinService.getCurrentRequest()).getHttpServletRequest()
+                .getRequestURL().toString();
+        String codeViewUrl = RouteConfiguration.forSessionScope().getUrl(pagePath);
+        return startPath.concat(codeViewUrl).concat("/").concat(parameter);
     }
 }
