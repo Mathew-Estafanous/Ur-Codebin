@@ -4,6 +4,7 @@ import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.entity.UserAccount;
 import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.backend.interfaces.UserAccountService;
+import com.urcodebin.helpers.NotificationUtil;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.security.SecurityUtils;
 import com.urcodebin.views.main.MainView;
@@ -78,8 +79,8 @@ public class UserBinView extends VerticalLayout {
             String pasteUrlPath = PageRouter.getRouteToPage(CodeView.class, selectedCodePaste.getPasteId().toString());
             UI.getCurrent().getPage().executeJs("window.copyToClipboard($0)", pasteUrlPath);
 
-            Notification copiedNotification = Notification.show("Paste Url has been copied to your clipboard!");
-            copiedNotification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            String successMsg = "Paste Url has been copied to your clipboard!";
+            NotificationUtil.showNotification(successMsg, NotificationVariant.LUMO_SUCCESS);
         });
     }
     private void addListenerForDeleteBtn(Button deleteBtn) {
