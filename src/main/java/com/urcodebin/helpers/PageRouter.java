@@ -34,7 +34,7 @@ public class PageRouter {
     public static <C extends Component> String getRouteToPage(Class<? extends C> pagePath, String parameter) {
         String startPath = ((VaadinServletRequest) VaadinService.getCurrentRequest()).getHttpServletRequest()
                 .getRequestURL().toString();
-        String codeViewUrl = RouteConfiguration.forSessionScope().getUrl(pagePath);
-        return startPath.concat(codeViewUrl).concat("/").concat(parameter);
+        String pageViewUrl = RouteConfiguration.forSessionScope().getUrl(pagePath);
+        return startPath.concat(pageViewUrl).concat("/").concat(parameter);
     }
 }
