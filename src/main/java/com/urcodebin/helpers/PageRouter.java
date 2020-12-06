@@ -1,6 +1,5 @@
 package com.urcodebin.helpers;
 
-import com.urcodebin.views.paste.CodeView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.HasUrlParameter;
