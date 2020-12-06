@@ -2,21 +2,22 @@ package com.urcodebin.views.paste;
 
 import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.interfaces.PasteService;
-import com.urcodebin.convertors.StringToLocalDateTime;
-import com.urcodebin.convertors.StringToPasteSyntax;
+import com.urcodebin.helpers.NotificationUtil;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,10 @@ import java.util.UUID;
 @Route(value = "view", layout = MainView.class)
 @PageTitle("Code View")
 @CssImport("./styles/views/paste/code-view.css")
+@JsModule("./styles/copytoclipboard.js")
 public class CodeView extends Div implements HasUrlParameter<String> {
 
     private final TextArea sourceCode = new TextArea("Source Code");
-    private final Label syntaxLabel = new Label("Paste Syntax:");
-    private final TextField pasteSyntax = new TextField();
-    private final Label expirationLabel = new Label("Code Expiration:");
-    private final TextField codeExpirationDate = new TextField();
     private final H2 pasteTitle = new H2("Paste Title");
 
     private final Binder<CodePaste> binder = new Binder<>(CodePaste.class);
@@ -47,10 +45,10 @@ public class CodeView extends Div implements HasUrlParameter<String> {
 
         add(setupTitleView());
         add(new Hr());
-        add(createChosenOptionsView());
+        add(createButtonViews());
         add(createCodeView());
 
-        createBinderForFields();
+        binder.bindInstanceFields(this);
     }
 
     @Override
@@ -61,16 +59,6 @@ public class CodeView extends Div implements HasUrlParameter<String> {
         } else {
             usePasteIdToFindAndDisplay(pasteId);
         }
-    }
-
-    private void createBinderForFields() {
-        binder.forField(codeExpirationDate)
-                .withConverter(new StringToLocalDateTime())
-                .bind(CodePaste::getPasteExpiration, CodePaste::setPasteExpiration);
-        binder.forField(pasteSyntax)
-                .withConverter(new StringToPasteSyntax())
-                .bind(CodePaste::getPasteSyntax, CodePaste::setPasteSyntax);
-        binder.bindInstanceFields(this);
     }
 
     private void usePasteIdToFindAndDisplay(String pasteId) {
@@ -90,20 +78,45 @@ public class CodeView extends Div implements HasUrlParameter<String> {
 
     private void updatePageWithInformation(CodePaste foundCodePaste) {
         pasteTitle.setText(foundCodePaste.getPasteTitle());
-        binder.readBean(foundCodePaste);
+        binder.setBean(foundCodePaste);
     }
 
     private void routeBackToMainPageAndNotifyUser() {
         PageRouter.routeToPage(UploadPasteView.class);
-        Notification.show("We received an invalid ID and re-routed you back to the home page. " +
+        NotificationUtil.showNotification("We received an invalid ID and re-routed you back to the home page. " +
                 "Please retry with a valid ID.");
     }
 
-    private Component createChosenOptionsView() {
-        return new HorizontalLayout(
-                syntaxLabel, pasteSyntax,
-                expirationLabel, codeExpirationDate
-        );
+    private Component createButtonViews() {
+        Button copyCodeBtn = createCopyCodeButton();
+        Button getShareLinkBtn = createShareLinkButton();
+        return new HorizontalLayout(copyCodeBtn, getShareLinkBtn);
+    }
+
+    private Button createShareLinkButton() {
+        Button getShareLinkBtn = new Button("Get Share Link");
+        getShareLinkBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        getShareLinkBtn.addClickListener(e -> {
+            String pasteId = binder.getBean().getPasteId().toString();
+            String pathToCurrentUrl = PageRouter.getRouteToPage(CodeView.class, pasteId);
+            copyToClipboard(pathToCurrentUrl, "Shareable Link Copied To Clipboard!");
+        });
+        return getShareLinkBtn;
+    }
+
+    private Button createCopyCodeButton() {
+        Button copyCodeBtn = new Button("Copy Raw Code");
+        copyCodeBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        copyCodeBtn.addClickListener(e -> {
+            String sourceCode = binder.getBean().getSourceCode();
+            copyToClipboard(sourceCode, "Source Code Copied To Clipboard!");
+        });
+        return copyCodeBtn;
+    }
+
+    private void copyToClipboard(String toCopy, String successMsg) {
+        UI.getCurrent().getPage().executeJs("window.copyToClipboard($0)", toCopy);
+        NotificationUtil.showNotification(successMsg, NotificationVariant.LUMO_SUCCESS);
     }
 
     private Component createCodeView() {
@@ -122,8 +135,6 @@ public class CodeView extends Div implements HasUrlParameter<String> {
     }
 
     private Component setupTitleView() {
-        pasteSyntax.setReadOnly(true);
-        codeExpirationDate.setReadOnly(true);
         Div headerDiv= new Div();
         headerDiv.add(pasteTitle);
         return headerDiv;

@@ -2,6 +2,7 @@ package com.urcodebin.views.account;
 
 import com.urcodebin.backend.entity.UserAccount;
 import com.urcodebin.backend.interfaces.UserAccountService;
+import com.urcodebin.helpers.NotificationUtil;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.views.main.MainView;
 import com.vaadin.flow.component.button.Button;
@@ -10,7 +11,6 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -130,8 +130,7 @@ public class RegisterView extends VerticalLayout {
 
     private void successfulRegistration() {
         String successMessage = "Awesome your registration is complete! You are now a member of Ur-Codebin.";
-        Notification notification = Notification.show(successMessage);
-        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        NotificationUtil.showNotification(successMessage, NotificationVariant.LUMO_SUCCESS);
         PageRouter.routeToPage(LoginView.class);
     }
 

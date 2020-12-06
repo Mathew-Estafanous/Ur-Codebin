@@ -4,6 +4,7 @@ import com.urcodebin.backend.entity.CodePaste;
 import com.urcodebin.backend.entity.UserAccount;
 import com.urcodebin.backend.interfaces.PasteService;
 import com.urcodebin.backend.interfaces.UserAccountService;
+import com.urcodebin.helpers.NotificationUtil;
 import com.urcodebin.helpers.PageRouter;
 import com.urcodebin.security.SecurityUtils;
 import com.urcodebin.views.main.MainView;
@@ -18,15 +19,11 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteConfiguration;
-import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
@@ -78,11 +75,11 @@ public class UserBinView extends VerticalLayout {
 
     private void addListenerForCopyLinkBtn(Button copyBtn) {
         copyBtn.addClickListener(event -> {
-            String pasteUrlPath = getPasteUrlPath();
+            String pasteUrlPath = PageRouter.getRouteToPage(CodeView.class, selectedCodePaste.getPasteId().toString());
             UI.getCurrent().getPage().executeJs("window.copyToClipboard($0)", pasteUrlPath);
 
-            Notification copiedNotification = Notification.show("Paste Url has been copied to your clipboard!");
-            copiedNotification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            String successMsg = "Paste Url has been copied to your clipboard!";
+            NotificationUtil.showNotification(successMsg, NotificationVariant.LUMO_SUCCESS);
         });
     }
     private void addListenerForDeleteBtn(Button deleteBtn) {
@@ -162,13 +159,5 @@ public class UserBinView extends VerticalLayout {
             return "";
         }
         return username;
-    }
-
-    private String getPasteUrlPath() {
-        String startPath = ((VaadinServletRequest) VaadinService.getCurrentRequest()).getHttpServletRequest()
-                .getRequestURL().toString();
-        String codeViewUrl = RouteConfiguration.forSessionScope().getUrl(CodeView.class);
-        String codePasteId = selectedCodePaste.getPasteId().toString();
-        return startPath.concat(codeViewUrl).concat("/").concat(codePasteId);
     }
 }
