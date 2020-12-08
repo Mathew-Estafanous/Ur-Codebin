@@ -6,7 +6,9 @@ public enum PasteExpiration implements HasStringValue {
     ONEHOUR ("1 Hour", 60),
     FIVEHOURS ("5 Hours", 300),
     ONEDAY ("1 Day", 1440),
-    THREEDAYS("3 Days", 4320);
+    THREEDAYS("3 Days", 4320),
+    FIVEDAYS("5 Days", 7200),
+    ONEWEEK("1 Week", 10080);
 
     private final String value;
     private final int offsetMin;
