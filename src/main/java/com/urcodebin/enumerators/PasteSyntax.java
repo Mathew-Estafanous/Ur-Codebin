@@ -7,13 +7,14 @@ public enum PasteSyntax implements HasStringValue {
     Python ("Python"),
     JAVASCRIPT ("JavaScript"),
     GO ("Go"),
-    SQL ("SQL"),
     CLANG ("C"),
     CPLUSPLUS ("C++"),
     PHP ("PHP"),
     SWIFT ("Swift"),
     LUA ("Lua"),
-    RUBY ("Ruby");
+    RUBY ("Ruby"),
+    MYSQL("MySQL"),
+    POSTGRESQL("PostgreSQL");
 
     private final String value;
     PasteSyntax(String value) {
