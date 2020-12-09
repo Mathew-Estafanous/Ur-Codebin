@@ -3,7 +3,6 @@ package com.urcodebin.helpers;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.Location;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServletRequest;
@@ -34,6 +33,7 @@ public class PageRouter {
     public static <C extends Component> String getRouteToPage(Class<? extends C> pagePath, String parameter) {
         String startPath = ((VaadinServletRequest) VaadinService.getCurrentRequest()).getServerName();
         String pageViewUrl = RouteConfiguration.forSessionScope().getUrl(pagePath);
-        return startPath.concat(pageViewUrl).concat("/").concat(parameter);
+        return startPath.concat("/").concat(pageViewUrl)
+                .concat("/").concat(parameter);
     }
 }
