@@ -44,14 +44,6 @@ Most of the focus was not on front-end design, but more on the back-end.The main
 was to help me learn more about back-end technologies,and the steps to creating a fully functioning 
 production environment that uses many deployment technologies like Docker and AWS. 
 
-### Future Features
-
-This project is still a work in progress and there are many future changes that are expected to be added
-to enhance the project. Here is a small list of features that are hoped to achieve.
-* Public & Private Pastes
-* More filtering options for public pastes
-* Profile system that connects pastes to specific users.
-
 ### Technologies Used
 
 * [Vaadin](https://vaadin.com/)
