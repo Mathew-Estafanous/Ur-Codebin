@@ -22,6 +22,6 @@ jobs:
         env:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKERFILE: "./Docker/Dockerfile" 
+          DOCKERFILE: "Dockerfile" 
           IMAGE_NAME: "mathewestafanous/ur-codebin"
           LATEST: "true"
