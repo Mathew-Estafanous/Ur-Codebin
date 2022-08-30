@@ -11,7 +11,7 @@ COPY src ./src/
 COPY frontend ./frontend/
 RUN mvn package -Pproduction
 
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM openjdk:11-jre-slim
 WORKDIR /app
 COPY --from=builder /app/target/ur-codebin-1.0-SNAPSHOT.jar app.jar
-CMD java -jar -Dspring.profiles.active=prod app.jar
+CMD java -jar app.jar

@@ -1,0 +1,20 @@
+services:
+  database:
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: ${PROD_USERNAME}
+      MYSQL_ROOT_PASSWORD: ${PROD_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql
+      # Copy the prod schema
+      - ./src/main/resources/META-INF/resources/database/schema/prod.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  codebin:
+    entrypoint: "java -jar -Dspring.profiles.active=prod app.jar"
+    restart: unless-stopped
+    environment:
+      DB_USERNAME: ${PROD_USERNAME}
+      DB_PASSWORD: ${PROD_PASSWORD}
+
+volumes:
+  mysql:
